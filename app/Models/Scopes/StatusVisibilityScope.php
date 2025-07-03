@@ -5,6 +5,7 @@ namespace App\Models\Scopes;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class StatusVisibilityScope implements Scope
@@ -17,13 +18,14 @@ class StatusVisibilityScope implements Scope
         $user = Auth::user();
 
         if (!$user) {
+            $builder->where('status', 'Approved');
             return;
         }
 
         if ($user->hasAnyRole(['superadmin', 'admin_kabupaten'])) {
             $builder->whereIn('status', ['Pending', 'Approved', 'Rejected']);
         } elseif ($user->hasRole('admin_desa')) {
-            $builder->whereIn('status', ['Arsip', 'Pending', 'Approved', 'Rejected']);
+            $builder->whereIn('status', ['Draft', 'Arsip', 'Pending', 'Approved', 'Rejected']);
         } else {
             // Role lain hanya bisa melihat yang approved
             $builder->where('status', 'Approved');

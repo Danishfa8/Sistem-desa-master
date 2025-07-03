@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('kelembagaan_desas', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('id_kategori')->constrained('kategoris')->onDelete('cascade');
             $table->foreignId('desa_id')->constrained('desas')->onDelete('cascade');
             $table->foreignId('rt_rw_desa_id')->constrained('rt_rw_desas')->onDelete('cascade');
-            $table->integer('tahun');
+            $table->year('tahun')->nullable();
             $table->enum('jenis_kelembagaan', ['Kelompok Tani']);
             $table->string('nama_kelembagaan');
             $table->string('created_by');

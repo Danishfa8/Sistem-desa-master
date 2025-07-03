@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  * Class SumberDayaAlamDesa
  *
  * @property $id
+ * @property $id_kategori
  * @property $desa_id
  * @property $rt_rw_desa_id
  * @property $tahun
@@ -49,7 +50,7 @@ class SumberDayaAlamDesa extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['desa_id', 'rt_rw_desa_id', 'tahun', 'jenis_sumber_daya_alam', 'created_by', 'updated_by', 'status', 'reject_reason', 'approved_by', 'approved_at'];
+    protected $fillable = ['id_kategori','desa_id', 'rt_rw_desa_id', 'tahun', 'jenis_sumber_daya_alam', 'created_by', 'updated_by', 'status', 'reject_reason', 'approved_by', 'approved_at'];
 
 
     /**
@@ -67,5 +68,8 @@ class SumberDayaAlamDesa extends Model
     {
         return $this->belongsTo(\App\Models\RtRwDesa::class, 'rt_rw_desa_id', 'id');
     }
-    
+    public function kategori()
+    {
+        return $this->belongsTo(\App\Models\Kategori::class, 'id_kategori', 'id');
+    }
 }

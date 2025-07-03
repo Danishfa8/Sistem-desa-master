@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  * Class IndustriPenghasilLimbahDesa
  *
  * @property $id
+ * @property $id_kategori
  * @property $desa_id
  * @property $rt_rw_desa_id
  * @property $tahun
@@ -43,7 +44,7 @@ class IndustriPenghasilLimbahDesa extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['desa_id', 'rt_rw_desa_id', 'tahun', 'jenis_industri', 'created_by', 'updated_by', 'status', 'reject_reason', 'approved_by', 'approved_at'];
+    protected $fillable = ['id_kategori','desa_id', 'rt_rw_desa_id', 'tahun', 'jenis_industri', 'created_by', 'updated_by', 'status', 'reject_reason', 'approved_by', 'approved_at'];
 
 
     /**
@@ -60,5 +61,14 @@ class IndustriPenghasilLimbahDesa extends Model
     public function rtRwDesa()
     {
         return $this->belongsTo(\App\Models\RtRwDesa::class, 'rt_rw_desa_id', 'id');
+    }
+    /**
+     * Relasi ke model Kategori
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function kategori()
+    {
+        return $this->belongsTo(\App\Models\Kategori::class, 'id_kategori', 'id');
     }
 }

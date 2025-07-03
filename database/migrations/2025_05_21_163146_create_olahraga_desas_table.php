@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('olahraga_desas', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('id_kategori')->constrained('kategoris')->onDelete('cascade');
             $table->foreignId('desa_id')->constrained('desas')->onDelete('cascade');
             $table->foreignId('rt_rw_desa_id')->constrained('rt_rw_desas')->onDelete('cascade');
-            $table->integer('tahun');
+            $table->year('tahun');
             $table->enum('jenis_olahraga', ['Sepak Bola', 'Bulu Tangkis', 'Tenis Meja', 'Futsal/Mini Soccer', 'Voli', 'Kolamm Renang', 'Basket', 'Tenis Lapangan', 'Kelompok Olahraga', 'Lainnya']);
             $table->string('nama_kelompok_olahraga');
             $table->string('created_by');

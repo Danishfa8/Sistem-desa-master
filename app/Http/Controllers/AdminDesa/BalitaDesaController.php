@@ -62,9 +62,9 @@ class BalitaDesaController extends Controller
     public function edit($id): View
     {
         $balitaDesa = BalitaDesa::find($id);
-        $desa = Desa::all();
+        $desas = Desa::all();
 
-        return view('admin_desa.balita-desa.edit', compact('balitaDesa', 'desa'));
+        return view('admin_desa.balita-desa.edit', compact('balitaDesa', 'desas'));
     }
 
     /**

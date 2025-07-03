@@ -80,6 +80,22 @@
             {!! $errors->first('longitude', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
             <small class="text-danger">*Opsional</small>
         </div>
+            {{-- ✅ Tambahan field foto --}}
+            <div class="form-group mb-2">
+            <label for="foto" class="form-label">Foto Jembatan</label>
+            <input type="file" name="foto" id="foto" accept="image/*"
+                class="form-control @error('foto') is-invalid @enderror"
+                {{ isset($jembatanDesa->id) ? '' : 'required' }}>
+            <small class="text-muted">Format: jpg, jpeg, png. Maksimal 2MB.</small>
+            @error('foto') <div class="invalid-feedback">{{ $message }}</div> @enderror
+
+            @if (isset($jembatanDesa->foto))
+                <div class="mt-2">
+                    <img src="{{ asset('storage/foto_jembatan/' . $jembatanDesa->foto) }}" alt="Foto Jembatan"
+                        style="max-height: 150px; border: 1px solid #ccc;">
+                </div>
+            @endif
+        </div>
 
     </div>
     <div class="col-md-12 mt20 mt-2">

@@ -29,10 +29,10 @@
 
                 <div class="row mb-3">
                     <div class="col-sm-4">
-                        <strong>Jenis Balita</strong>
+                        <strong>Jumlah Balita</strong>
                     </div>
                     <div class="col-sm-8">
-                        {{ $balitaDesa->jenis_balita }}
+                        {{ $balitaDesa->jumlah_balita }}
                     </div>
                 </div>
 

@@ -9,7 +9,9 @@ use Illuminate\Database\Eloquent\Model;
  * Class Ekonomi
  *
  * @property $id
+ * @property $id_kategori
  * @property $desa_id
+ * @property $rt_rw_desa_id
  * @property $tahun
  * @property $jenis
  * @property $nama
@@ -42,7 +44,7 @@ class Ekonomi extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['desa_id', 'tahun', 'jenis', 'nama', 'pemilik', 'created_by', 'updated_by', 'status', 'reject_reason', 'approved_by', 'approved_at'];
+    protected $fillable = ['rt_rw_desa_id','id_kategori','desa_id', 'tahun', 'jenis', 'nama', 'pemilik', 'created_by', 'updated_by', 'status', 'reject_reason', 'approved_by', 'approved_at'];
 
 
     /**
@@ -51,5 +53,21 @@ class Ekonomi extends Model
     public function desa()
     {
         return $this->belongsTo(\App\Models\Desa::class, 'desa_id', 'id');
+    }
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function rtRwDesa()
+    {
+        return $this->belongsTo(\App\Models\RtRwDesa::class, 'rt_rw_desa_id', 'id');
+    }
+    /**
+     * Relasi ke model Kategori
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function kategori()
+    {
+        return $this->belongsTo(\App\Models\Kategori::class, 'id_kategori', 'id');
     }
 }

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  * Class KelembagaanDesa
  *
  * @property $id
+ * @property $id_kategori
  * @property $desa_id
  * @property $rt_rw_desa_id
  * @property $tahun
@@ -49,7 +50,7 @@ class KelembagaanDesa extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['desa_id', 'rt_rw_desa_id', 'tahun', 'jenis_kelembagaan', 'nama_kelembagaan', 'created_by', 'updated_by', 'status', 'reject_reason', 'approved_by', 'approved_at'];
+    protected $fillable = ['id_kategori','id_kategori', 'desa_id', 'rt_rw_desa_id', 'tahun', 'jenis_kelembagaan', 'nama_kelembagaan', 'created_by', 'updated_by', 'status', 'reject_reason', 'approved_by', 'approved_at'];
 
 
     /**
@@ -59,7 +60,7 @@ class KelembagaanDesa extends Model
     {
         return $this->belongsTo(\App\Models\Desa::class, 'desa_id', 'id');
     }
-    
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -67,5 +68,14 @@ class KelembagaanDesa extends Model
     {
         return $this->belongsTo(\App\Models\RtRwDesa::class, 'rt_rw_desa_id', 'id');
     }
-    
+
+    /**
+     * Relasi ke model Kategori
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function kategori()
+    {
+        return $this->belongsTo(\App\Models\Kategori::class, 'id_kategori', 'id');
+    }
 }

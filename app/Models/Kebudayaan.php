@@ -1,19 +1,18 @@
 <?php
 
 namespace App\Models;
-
 use App\Models\Scopes\StatusVisibilityScope;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class KondisiLingkunganKeluargaDesa
+ * Class TempatTinggalDesa
  *
  * @property $id
  * @property $id_kategori
  * @property $desa_id
  * @property $rt_rw_desa_id
  * @property $tahun
- * @property $jenis_kondisi
+ * @property $jenis_kebudayaan
  * @property $created_by
  * @property $updated_by
  * @property $status
@@ -28,9 +27,8 @@ use Illuminate\Database\Eloquent\Model;
  * @package App
  * @mixin \Illuminate\Database\Eloquent\Builder
  */
-class KondisiLingkunganKeluargaDesa extends Model
+class Kebudayaan extends Model
 {
-
     /**
      * The "booted" method is called when the model is being booted.
      * Here we add a global scope to filter the results based on the status.
@@ -46,7 +44,6 @@ class KondisiLingkunganKeluargaDesa extends Model
      *
      * @var int
      */
-
     protected $perPage = 20;
 
     /**
@@ -54,7 +51,7 @@ class KondisiLingkunganKeluargaDesa extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['id_kategori','desa_id', 'rt_rw_desa_id', 'tahun', 'jenis_kondisi', 'created_by', 'updated_by', 'status', 'reject_reason', 'approved_by', 'approved_at'];
+    protected $fillable = ['id_kategori','desa_id', 'rt_rw_desa_id', 'tahun', 'jenis_kebudayaan', 'created_by', 'updated_by', 'status', 'reject_reason', 'approved_by', 'approved_at'];
 
 
     /**
