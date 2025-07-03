@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('sarana_pendukung_kesehatan_desas', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('id_kategori')->constrained('kategoris')->onDelete('cascade');
             $table->foreignId('desa_id')->constrained('desas')->onDelete('cascade');
             $table->foreignId('rt_rw_desa_id')->constrained('rt_rw_desas')->onDelete('cascade');
-            $table->integer('tahun');
+            $table->year('tahun');
             $table->enum('jenis_sarana', ['Praktek Doketer', 'Praktek Dokter Spesialis', 'Praktek Dokter Gigi', 'Praktek Bidan', 'Praktek Dokter Hewan', 'Apotek', 'Toko Obat Tradisional', 'Ambulan']);
             $table->string('created_by');
             $table->string('updated_by')->nullable();

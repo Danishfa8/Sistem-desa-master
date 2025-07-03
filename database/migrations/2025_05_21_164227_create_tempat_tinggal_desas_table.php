@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('tempat_tinggal_desas', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('id_kategori')->constrained('kategoris')->onDelete('cascade');
             $table->foreignId('desa_id')->constrained('desas')->onDelete('cascade');
             $table->foreignId('rt_rw_desa_id')->constrained('rt_rw_desas')->onDelete('cascade');
-            $table->integer('tahun');
+            $table->year('tahun');
             $table->enum('jenis_tempat_tinggal', ['Jumlah Perumahan', 'Jumlah Rumah', 'Jumlah Warga', 'RLTH']);
             $table->string('created_by');
             $table->string('updated_by')->nullable();

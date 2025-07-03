@@ -37,6 +37,7 @@
                                         <th>RT/RW</th>
                                         <th>Tahun</th>
                                         <th>Jenis Pendidikan</th>
+                                        <th>Nama Pendidikan</th>
                                         <th>Status Pendidikan</th>
                                         <th>Foto</th>
                                         <th>Created By</th>
@@ -53,8 +54,9 @@
                                             <td>{{ $pendidikanDesa->rtRwDesa->rt }}/{{ $pendidikanDesa->rtRwDesa->rw }}</td>
                                             <td>{{ $pendidikanDesa->tahun }}</td>
                                             <td>{{ $pendidikanDesa->jenis_pendidikan }}</td>
+                                            <td>{{ $pendidikanDesa->nama_pendidikan }}</td>
                                             <td>{{ $pendidikanDesa->status_pendidikan }}</td>
-                                            <td><img src="{{ asset('storage/' . $pendidikanDesa->foto) }}"
+                                            <td><img src="{{ asset('storage/foto_pendidikan/' . $pendidikanDesa->foto) }}"
                                                     alt="Pendidikan Desa"
                                                     style="width: 100px; height: 100px; object-fit: cover;"></td>
                                             <td>{{ $pendidikanDesa->created_by }}</td>

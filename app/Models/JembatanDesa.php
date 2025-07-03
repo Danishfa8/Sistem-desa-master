@@ -56,7 +56,7 @@ class JembatanDesa extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['desa_id', 'rt_rw_desa_id', 'nama_jembatan', 'panjang', 'lebar', 'kondisi', 'lokasi', 'created_by', 'updated_by', 'status', 'reject_reason', 'approved_by', 'approved_at', 'latitude', 'longitude'];
+    protected $fillable = ['desa_id', 'rt_rw_desa_id', 'nama_jembatan', 'panjang', 'lebar', 'kondisi', 'lokasi', 'foto', 'created_by', 'updated_by', 'status', 'reject_reason', 'approved_by', 'approved_at', 'latitude', 'longitude'];
 
 
     /**

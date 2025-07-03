@@ -45,9 +45,10 @@ class PendidikanDesaController extends Controller
         if (request()->hasFile('foto')) {
             $foto = request()->file('foto');
             $fotoName = time() . '_' . $foto->getClientOriginalName();
-            $foto->storeAs('pendidikan-desa', $fotoName, 'public');
+            $foto->storeAs('foto_pendidikan', $fotoName, 'public');
 
-            $validatedData['foto'] = 'pendidikan-desa/' . $fotoName;
+            $validatedData['foto'] = $fotoName;
+
         }
 
         PendidikanDesa::create($validatedData);

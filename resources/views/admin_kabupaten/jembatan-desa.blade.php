@@ -34,6 +34,7 @@
                                         <th>Lebar</th>
                                         <th>Kondisi</th>
                                         <th>Lokasi</th>
+                                        <th>Foto</th>
                                         <th>Created By</th>
 
                                         <th></th>
@@ -62,6 +63,15 @@
                                                 @endif
                                             </td>
                                             <td>{{ $jembatanDesa->lokasi }}</td>
+                                             <td>
+    @if ($jembatanDesa->foto)
+        <img src="{{ asset('storage/foto_jembatan/' . $jembatanDesa->foto) }}"
+             alt="Foto Jembatan"
+             style="max-height: 60px; border-radius: 4px;">
+    @else
+        <span class="text-muted">Tidak ada</span>
+    @endif
+</td>
                                             <td>{{ $jembatanDesa->created_by }}</td>
                                             <x-action-buttons :item="$jembatanDesa" route-prefix="admin_desa.jembatan-desa"
                                                 :ajukan-route="true" status-field="status" />

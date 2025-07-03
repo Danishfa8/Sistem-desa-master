@@ -30,6 +30,7 @@
                                         <th>RT/RW</th>
                                         <th>Tahun</th>
                                         <th>Jenis Pendidikan</th>
+                                        <th>Nama Pendidikan</th>
                                         <th>Status Pendidikan</th>
                                         <th>Foto</th>
                                         <th>Created By</th>
@@ -46,8 +47,17 @@
                                             <td>{{ $pendidikanDesa->rtRwDesa->rt }}/{{ $pendidikanDesa->rtRwDesa->rw }}</td>
                                             <td>{{ $pendidikanDesa->tahun }}</td>
                                             <td>{{ $pendidikanDesa->jenis_pendidikan }}</td>
+                                            <td>{{ $pendidikanDesa->nama_pendidikan }}</td>
                                             <td>{{ $pendidikanDesa->status_pendidikan }}</td>
-                                            <td>{{ $pendidikanDesa->foto }}</td>
+                                            <td>
+                                            @if ($pendidikanDesa->foto)
+                                                <img src="{{ asset('storage/foto_pendidikan/' . $pendidikanDesa->foto) }}"
+                                                    alt="Foto Pendidikan"
+                                                    style="max-height: 60px; border-radius: 4px;">
+                                            @else
+                                                <span class="text-muted">Tidak ada</span>
+                                            @endif
+                                        </td>
                                             <td>{{ $pendidikanDesa->created_by }}</td>
                                             <x-action-buttons :item="$pendidikanDesa" route-prefix="admin_desa.pendidikan-desa"
                                                 :ajukan-route="true" status-field="status" />

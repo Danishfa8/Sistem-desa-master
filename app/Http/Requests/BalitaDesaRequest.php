@@ -25,7 +25,7 @@ class BalitaDesaRequest extends FormRequest
             'desa_id' => 'required',
             'rt_rw_desa_id' => 'required',
             'tahun' => 'required|numeric',
-            'jenis_balita' => 'required',
+            'jumlah_balita' => 'required',
             'created_by' => 'required|string',
             'updated_by' => 'string',
             'status' => 'required',

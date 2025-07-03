@@ -13,8 +13,10 @@ return new class extends Migration
     {
         Schema::create('ekonomis', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('id_kategori')->constrained('kategoris')->onDelete('cascade');
+            $table->foreignId('rt_rw_desa_id')->constrained('rt_rw_desas')->onDelete('cascade');
             $table->foreignId('desa_id')->constrained('desas')->onDelete('cascade');
-            $table->integer('tahun');
+            $table->year('tahun');
             $table->enum('jenis', ['Toko Modern', 'Warung Tradisional', 'Industri']);
             $table->string('nama');
             $table->string('pemilik');

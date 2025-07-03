@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Kategori;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,8 +14,10 @@ return new class extends Migration
     {
         Schema::create('usaha_ekonomis', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('rt_rw_desa_id')->constrained('rt_rw_desas')->onDelete('cascade');
+            $table->foreignId('id_kategori')->constrained('Kategoris')->onDelete('cascade');
             $table->foreignId('desa_id')->constrained('desas')->onDelete('cascade');
-            $table->integer('tahun');
+            $table->year('tahun');
             $table->string('nama_usaha');
             $table->string('luas')->comment('Meter Persegi');
             $table->string('created_by');
