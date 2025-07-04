@@ -22,9 +22,10 @@ class KondisiLingkunganKeluargaDesaRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'id_kategori' => 'required',
             'desa_id' => 'required',
             'rt_rw_desa_id' => 'required',
-            'tahun' => 'required|numeric',
+            'tahun' => 'required|digits:4|integer|min:1900|max:' . (date('Y') + 5),
             'jenis_kondisi' => 'required',
             'created_by' => 'required|string',
             'updated_by' => 'string',

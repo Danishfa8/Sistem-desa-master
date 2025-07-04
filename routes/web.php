@@ -38,8 +38,12 @@ Route::prefix('map')->name('map.')->group(function () {
 // Ex
 Route::get('/desa-dalam-angka', [DataAngkaController::class, 'index'])->name('data.index');
 Route::post('/data-angka/get-by-category', [DataAngkaController::class, 'getDataByCategory'])->name('data.getByCategory');
-Route::post('/data-angka/get-desa-by-kecamatan', [DataAngkaController::class, 'getDesaByKecamatan'])->name('data.getDesaByKecamatan');
+Route::post('/data-angka/get-desa', [DataAngkaController::class, 'getDesaByKecamatan'])->name('data.getDesaByKecamatan');
+Route::post('/get-tahun-by-desa', [DataAngkaController::class, 'getTahunByDesa'])->name('data.getTahunByDesa');
 Route::post('/data-angka/get-result', [DataAngkaController::class, 'getResult'])->name('data.getResult');
+Route::post('/data-angka/get-detail-result', [DataAngkaController::class, 'detailResult'])->name('data.getDetailResult');
+Route::post('/data/download-pdf', [DataAngkaController::class, 'downloadPdf'])->name('data.downloadPdf');
+Route::post('/data/download-excel', [DataAngkaController::class, 'downloadExcel'])->name('data.downloadExcel');
 // Debug routes (hapus setelah selesai debugging)
 Route::get('/debug-table-structure', [DataAngkaController::class, 'debugTableStructure'])->name('debug.tableStructure');
 Route::get('/debug-query', [DataAngkaController::class, 'debugQuery'])->name('debug.query');

@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\SaranaLainyaDesaRequest;
 use App\Models\Desa;
+use App\Models\Kategori;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
@@ -29,10 +30,11 @@ class SaranaLainyaDesaController extends Controller
      */
     public function create(): View
     {
+        $kategoris = Kategori::all();
         $saranaLainyaDesa = new SaranaLainyaDesa();
         $desas = Desa::all();
 
-        return view('superadmin.sarana-lainya-desa.create', compact('saranaLainyaDesa', 'desas'));
+        return view('superadmin.sarana-lainya-desa.create', compact('kategoris','saranaLainyaDesa', 'desas'));
     }
 
     /**
@@ -61,10 +63,11 @@ class SaranaLainyaDesaController extends Controller
      */
     public function edit($id): View
     {
+        $kategoris = Kategori::all();
         $saranaLainyaDesa = SaranaLainyaDesa::find($id);
         $desas = Desa::all();
 
-        return view('sarana-lainya-desa.edit', compact('saranaLainyaDesa', 'desas'));
+        return view('sarana-lainya-desa.edit', compact('kategoris','saranaLainyaDesa', 'desas'));
     }
 
     /**

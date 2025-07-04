@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\KerawananSosialDesaRequest;
 use App\Models\Desa;
+use App\Models\Kategori;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
@@ -29,10 +30,11 @@ class KerawananSosialDesaController extends Controller
      */
     public function create(): View
     {
+        $kategoris = Kategori::all();
         $kerawananSosialDesa = new KerawananSosialDesa();
         $desas = Desa::all();
 
-        return view('admin_desa.kerawanan-sosial-desa.create', compact('kerawananSosialDesa', 'desas'));
+        return view('admin_desa.kerawanan-sosial-desa.create', compact('kategoris','kerawananSosialDesa', 'desas'));
     }
 
     /**
@@ -61,10 +63,11 @@ class KerawananSosialDesaController extends Controller
      */
     public function edit($id): View
     {
+        $kategoris = Kategori::all();
         $kerawananSosialDesa = KerawananSosialDesa::find($id);
         $desas = Desa::all();
 
-        return view('admin_desa.kerawanan-sosial-desa.edit', compact('kerawananSosialDesa', 'desas'));
+        return view('admin_desa.kerawanan-sosial-desa.edit', compact('kategoris','kerawananSosialDesa', 'desas'));
     }
 
     /**
