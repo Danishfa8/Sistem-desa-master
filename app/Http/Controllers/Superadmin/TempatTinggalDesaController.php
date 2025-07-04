@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\TempatTinggalDesaRequest;
 use App\Models\Desa;
+use App\Models\Kategori;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
@@ -29,10 +30,11 @@ class TempatTinggalDesaController extends Controller
      */
     public function create(): View
     {
+        $kategoris = Kategori::all();
         $tempatTinggalDesa = new TempatTinggalDesa();
         $desas = Desa::all();
 
-        return view('superadmin.tempat-tinggal-desa.create', compact('tempatTinggalDesa', 'desas'));
+        return view('superadmin.tempat-tinggal-desa.create', compact('kategoris','tempatTinggalDesa', 'desas'));
     }
 
     /**
@@ -61,10 +63,11 @@ class TempatTinggalDesaController extends Controller
      */
     public function edit($id): View
     {
+        $kategoris = Kategori::all();
         $tempatTinggalDesa = TempatTinggalDesa::find($id);
         $desas = Desa::all();
 
-        return view('superadmin.tempat-tinggal-desa.edit', compact('tempatTinggalDesa', 'desas'));
+        return view('superadmin.tempat-tinggal-desa.edit', compact('kategoris','tempatTinggalDesa', 'desas'));
     }
 
     /**

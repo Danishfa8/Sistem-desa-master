@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\EnergiDesaRequest;
 use App\Models\Desa;
+use App\Models\Kategori;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
@@ -29,10 +30,11 @@ class EnergiDesaController extends Controller
      */
     public function create(): View
     {
+        $kategoris = Kategori::all();
         $energiDesa = new EnergiDesa();
         $desas = Desa::all();
 
-        return view('superadmin.energi-desa.create', compact('energiDesa', 'desas'));
+        return view('superadmin.energi-desa.create', compact('kategoris','energiDesa', 'desas'));
     }
 
     /**
@@ -61,10 +63,11 @@ class EnergiDesaController extends Controller
      */
     public function edit($id): View
     {
+        $kategoris = Kategori::all();
         $energiDesa = EnergiDesa::find($id);
         $desas = Desa::all();
 
-        return view('superadmin.energi-desa.edit', compact('energiDesa', 'desas'));
+        return view('superadmin.energi-desa.edit', compact('kategoris','energiDesa', 'desas'));
     }
 
     /**

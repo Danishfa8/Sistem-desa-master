@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\SumberDayaAlamDesaRequest;
 use App\Models\Desa;
+use App\Models\Kategori;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
@@ -29,10 +30,11 @@ class SumberDayaAlamDesaController extends Controller
      */
     public function create(): View
     {
+        $kategoris = Kategori::all();
         $sumberDayaAlamDesa = new SumberDayaAlamDesa();
         $desas = Desa::all();
 
-        return view('superadmin.sumber-daya-alam-desa.create', compact('sumberDayaAlamDesa', 'desas'));
+        return view('superadmin.sumber-daya-alam-desa.create', compact('kategoris','sumberDayaAlamDesa', 'desas'));
     }
 
     /**
@@ -61,10 +63,11 @@ class SumberDayaAlamDesaController extends Controller
      */
     public function edit($id): View
     {
+        $kategoris = Kategori::all();
         $sumberDayaAlamDesa = SumberDayaAlamDesa::find($id);
         $desas = Desa::all();
 
-        return view('superadmin.sumber-daya-alam-desa.edit', compact('sumberDayaAlamDesa', 'desas'));
+        return view('superadmin.sumber-daya-alam-desa.edit', compact('kategoris','sumberDayaAlamDesa', 'desas'));
     }
 
     /**

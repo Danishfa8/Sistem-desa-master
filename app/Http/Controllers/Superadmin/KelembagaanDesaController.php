@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\KelembagaanDesaRequest;
 use App\Models\Desa;
+use App\Models\Kategori;
 use App\Models\RtRwDesa;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Redirect;
@@ -31,11 +32,12 @@ class KelembagaanDesaController extends Controller
      */
     public function create(): View
     {
+        $kategoris = Kategori::all();
         $kelembagaanDesa = new KelembagaanDesa();
         $desas = Desa::all();
         $rtRwDesa = RtRwDesa::all();
 
-        return view('superadmin.kelembagaan-desa.create', compact('kelembagaanDesa', 'desas', 'rtRwDesa'));
+        return view('superadmin.kelembagaan-desa.create', compact('kategoris','kelembagaanDesa', 'desas', 'rtRwDesa'));
     }
 
     /**
@@ -79,10 +81,11 @@ class KelembagaanDesaController extends Controller
      */
     public function edit($id): View
     {
+        $kategoris = Kategori::all();
         $kelembagaanDesa = KelembagaanDesa::find($id);
         $desas = Desa::all();
 
-        return view('superadmin.kelembagaan-desa.edit', compact('kelembagaanDesa', 'desas'));
+        return view('superadmin.kelembagaan-desa.edit', compact('kategoris','kelembagaanDesa', 'desas'));
     }
 
     /**

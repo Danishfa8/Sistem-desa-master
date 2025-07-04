@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\EkonomiRequest;
 use App\Models\Desa;
+use App\Models\Kategori;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
@@ -29,10 +30,11 @@ class EkonomiController extends Controller
      */
     public function create(): View
     {
+        $kategoris = Kategori::all();
         $ekonomi = new Ekonomi();
         $desas = Desa::all();
 
-        return view('superadmin.ekonomi.create', compact('ekonomi', 'desas'));
+        return view('superadmin.ekonomi.create', compact('kategoris','ekonomi', 'desas'));
     }
 
     /**
@@ -61,10 +63,11 @@ class EkonomiController extends Controller
      */
     public function edit($id): View
     {
+        $kategoris = Kategori::all();
         $ekonomi = Ekonomi::find($id);
         $desas = Desa::all();
 
-        return view('superadmin.ekonomi.edit', compact('ekonomi', 'desas'));
+        return view('superadmin.ekonomi.edit', compact('kategoris','ekonomi', 'desas'));
     }
 
     /**

@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\SaranaPendukungKesehatanDesaRequest;
 use App\Models\Desa;
+use App\Models\Kategori;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
@@ -29,10 +30,11 @@ class SaranaPendukungKesehatanDesaController extends Controller
      */
     public function create(): View
     {
+        $kategoris = Kategori::all();
         $saranaPendukungKesehatanDesa = new SaranaPendukungKesehatanDesa();
         $desas = Desa::all();
 
-        return view('superadmin.sarana-pendukung-kesehatan-desa.create', compact('saranaPendukungKesehatanDesa', 'desas'));
+        return view('superadmin.sarana-pendukung-kesehatan-desa.create', compact('kategoris','saranaPendukungKesehatanDesa', 'desas'));
     }
 
     /**
@@ -61,10 +63,11 @@ class SaranaPendukungKesehatanDesaController extends Controller
      */
     public function edit($id): View
     {
+        $kategoris = Kategori::all();
         $saranaPendukungKesehatanDesa = SaranaPendukungKesehatanDesa::find($id);
         $desas = Desa::all();
 
-        return view('superadmin.sarana-pendukung-kesehatan-desa.edit', compact('saranaPendukungKesehatanDesa', 'desas'));
+        return view('superadmin.sarana-pendukung-kesehatan-desa.edit', compact('kategoris','saranaPendukungKesehatanDesa', 'desas'));
     }
 
     /**
