@@ -38,7 +38,7 @@
                                 </div>
                                 <div class="form-group mb-2 mb20">
                                     <strong>Updated By:</strong>
-                                    {{ $ekonomi->updated_by }}
+                                    {{ $transportasi->updated_by }}
                                 </div>
                                 <div class="form-group mb-2 mb20">
                                     <strong>Status:</strong>

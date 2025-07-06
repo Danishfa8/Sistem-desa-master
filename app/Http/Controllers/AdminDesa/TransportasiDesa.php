@@ -39,19 +39,19 @@ class TransportasiDesa extends Controller
         $rtRwDesa = RtRwDesa::all();
 
 
-        return view('admin_desa.transportasi.create', compact('kategoris','transportasi', 'desas'));
+        return view('admin_desa.transportasi.create', compact('kategoris', 'transportasi', 'desas', 'rtRwDesa'));
     }
-        public function getRtRw($desa_id): JsonResponse
-        {
-            $rtRw = RtRwDesa::where('desa_id', $desa_id)->get();
+    public function getRtRw($desa_id): JsonResponse
+    {
+        $rtRw = RtRwDesa::where('desa_id', $desa_id)->get();
 
-            $rtRw->map(function ($item) {
-                $item->rt_rw = "RT {$item->rt} / RW {$item->rw}";
-                return $item;
-            });
+        $rtRw->map(function ($item) {
+            $item->rt_rw = "RT {$item->rt} / RW {$item->rw}";
+            return $item;
+        });
 
-            return response()->json($rtRw);
-        }
+        return response()->json($rtRw);
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -82,8 +82,9 @@ class TransportasiDesa extends Controller
         $kategoris = Kategori::all();
         $transportasi = Transportasi::find($id);
         $desas = Desa::all();
+        $rtRwDesa = RtRwDesa::all();
 
-        return view('admin_desa.transportasi.edit', compact('kategoris','transportasi', 'desas'));
+        return view('admin_desa.transportasi.edit', compact('kategoris', 'transportasi', 'desas', 'rtRwDesa'));
     }
 
     /**

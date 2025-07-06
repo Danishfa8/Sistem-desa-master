@@ -18,7 +18,7 @@
                             </span>
 
                             <div class="float-right">
-                                <a href="{{ route('admin_desa.ekonomi.create') }}" class="btn btn-primary btn-sm float-right"
+                                <a href="{{ route('admin_desa.transportasi.create') }}" class="btn btn-primary btn-sm float-right"
                                     data-placement="left">
                                     {{ __('Create New') }}
                                 </a>

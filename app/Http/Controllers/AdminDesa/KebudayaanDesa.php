@@ -34,11 +34,11 @@ class KebudayaanDesa extends Controller
     public function create(): View
     {
         $kategoris = Kategori::all();
-        $budayas = new Kebudayaan();
+        $budaya = new Kebudayaan();
         $desas = Desa::all();
         $rtRwDesa = RtRwDesa::all();
 
-        return view('admin_desa.budaya.create', compact('kategoris','budayas', 'desas'));
+        return view('admin_desa.budaya.create', compact('kategoris','budaya', 'desas','rtRwDesa'));
     }
         public function getRtRw($desa_id): JsonResponse
         {
@@ -79,10 +79,11 @@ class KebudayaanDesa extends Controller
     public function edit($id): View
     {
         $kategoris = Kategori::all();
-        $budayas = Kebudayaan::find($id);
+        $budaya = Kebudayaan::find($id);
         $desas = Desa::all();
+        $rtRwDesa = RtRwDesa::all();
 
-        return view('admin_desa.budaya.edit', compact('kategoris','budayas', 'desas'));
+        return view('admin_desa.budaya.edit', compact('kategoris','budaya', 'desas','rtRwDesa'));
     }
 
     /**

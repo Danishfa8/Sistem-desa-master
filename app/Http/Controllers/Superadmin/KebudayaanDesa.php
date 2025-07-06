@@ -37,7 +37,7 @@ class KebudayaanDesa extends Controller
         $desas = Desa::all();
         $rtRwDesa = RtRwDesa::all();
 
-        return view('superadmin.budaya.create', compact('kategoris','budayas', 'desas'));
+        return view('superadmin.budaya.create', compact('kategoris','budayas', 'desas','rtRwDesa'));
     }
     public function getRtRw($desa_id): JsonResponse
         {

@@ -7,7 +7,7 @@
                 <option value="">-- Pilih Kategori --</option>
                 @foreach ($kategoris as $kategori)
                 <option value="{{ $kategori->id }}"
-                    {{ old('id_kategori', $ekonomi?->id_kategori) == $kategori->id ? 'selected' : '' }}>
+                    {{ old('id_kategori', $transportasi?->id_kategori) == $kategori->id ? 'selected' : '' }}>
                     {{ $kategori->nama }}
                 </option>
                 @endforeach
@@ -20,7 +20,7 @@
                 <option value="">-- Pilih Desa --</option>
                 @foreach ($desas as $item)
                 <option value="{{ $item->id }}"
-                    {{ old('desa_transportasi?->desa_id) == $item->id ? 'selected' : '' }}>
+                    {{ old('desa_id', $transportasi?->desa_id) == $item->id ? 'selected' : '' }}>
                     {{ $item->nama_desa }}
                 </option>
                 @endforeach

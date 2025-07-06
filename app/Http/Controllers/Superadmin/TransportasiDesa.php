@@ -37,7 +37,7 @@ class TransportasiDesa extends Controller
         $desas = Desa::all();
         $rtRwDesa = RtRwDesa::all();
 
-        return view('superadmin.transportasi.create', compact('kategoris','transportasi', 'desas'));
+        return view('superadmin.transportasi.create', compact('kategoris','transportasi', 'desas','rtRwDesa'));
     }
         public function getRtRw($desa_id): JsonResponse
         {

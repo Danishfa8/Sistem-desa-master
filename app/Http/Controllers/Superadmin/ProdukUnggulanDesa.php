@@ -38,7 +38,7 @@ class ProdukUnggulanDesa extends Controller
         $desas = Desa::all();
         $rtRwDesa = RtRwDesa::all();
 
-        return view('superadmin.produk.create', compact('kategoris','produk', 'desas'));
+        return view('superadmin.produk.create', compact('kategoris','produk', 'desas','rtRwDesa'));
     }
         public function getRtRw($desa_id): JsonResponse
         {

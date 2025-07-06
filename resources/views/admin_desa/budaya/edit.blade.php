@@ -14,7 +14,7 @@
                         <span class="card-title">{{ __('Update') }} Kebudayaan</span>
                     </div>
                     <div class="card-body bg-white">
-                        <form method="POST" action="{{ route('admin_desa.budaya.update', $budayas->id) }}" role="form"
+                        <form method="POST" action="{{ route('admin_desa.budaya.update', $budaya->id) }}" role="form"
                             enctype="multipart/form-data">
                             {{ method_field('PATCH') }}
                             @csrf

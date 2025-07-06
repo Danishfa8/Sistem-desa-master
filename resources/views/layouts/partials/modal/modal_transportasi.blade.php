@@ -1,12 +1,12 @@
  <!-- Modal for Show -->
- <div id="showModal{{ $transportasi->id }}" class="modal flip" tabindex="-1"
-     aria-labelledby="showModalLabel{{ $transportasi->id }}" aria-hidden="true" style="display: none;">
+ <div id="showModal{{ $items->id }}" class="modal flip" tabindex="-1"
+     aria-labelledby="showModalLabel{{ $items->id }}" aria-hidden="true" style="display: none;">
      <div class="modal-dialog">
          <div class="modal-content">
              <div class="modal-header">
-                 <h5 class="modal-title" id="showModalLabel{{ $transportasi->id }}">
-                     Detail Disabilitas Desa {{ $transportasi->desa->nama_desa }} -
-                     {{ $transportasi->nama_transportasi }}
+                 <h5 class="modal-title" id="showModalLabel{{ $items->id }}">
+                     Detail Disabilitas Desa {{ $items->desa->nama_desa }} -
+                     {{ $items->nama_items }}
                  </h5>
                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
              </div>
@@ -16,7 +16,7 @@
                          <strong>Nama Desa</strong>
                      </div>
                      <div class="col-sm-8">
-                         {{ $transportasi->desa->nama_desa }}
+                         {{ $items->desa->nama_desa }}
                      </div>
                  </div>
 
@@ -25,7 +25,7 @@
                          <strong>Tahun</strong>
                      </div>
                      <div class="col-sm-8">
-                         {{ $transportasi->tahun }}
+                         {{ $items->tahun }}
                      </div>
                  </div>
                  <div class="row mb-3">
@@ -33,7 +33,7 @@
                          <strong>Jenis Transportasi </strong>
                      </div>
                      <div class="col-sm-8">
-                         {{ $transportasi->jenis_transportasi }}
+                         {{ $items->jenis_transportasi }}
                      </div>
                  </div>
 
@@ -42,16 +42,16 @@
                          <strong>Status</strong>
                      </div>
                      <div class="col-sm-8">
-                         @if ($transportasi->status == 'Arsip')
-                             <span class="badge bg-primary">{{ $transportasi->status }}</span>
-                         @elseif($transportasi->status == 'Pending')
-                             <span class="badge bg-warning">{{ $transportasi->status }}</span>
-                         @elseif ($transportasi->status == 'Approved')
-                             <span class="badge bg-success">{{ $transportasi->status }}</span>
-                         @elseif ($transportasi->status == 'Rejected')
-                             <span class="badge bg-danger">{{ $transportasi->status }}</span>
+                         @if ($items->status == 'Arsip')
+                             <span class="badge bg-primary">{{ $items->status }}</span>
+                         @elseif($items->status == 'Pending')
+                             <span class="badge bg-warning">{{ $items->status }}</span>
+                         @elseif ($items->status == 'Approved')
+                             <span class="badge bg-success">{{ $items->status }}</span>
+                         @elseif ($items->status == 'Rejected')
+                             <span class="badge bg-danger">{{ $items->status }}</span>
                          @else
-                             <span class="badge bg-secondary">{{ $transportasi->status }}</span>
+                             <span class="badge bg-secondary">{{ $items->status }}</span>
                          @endif
                      </div>
                  </div>
@@ -61,7 +61,7 @@
                          <strong>created By</strong>
                      </div>
                      <div class="col-sm-8">
-                         {{ $transportasi->created_by }}
+                         {{ $items->created_by }}
                      </div>
                  </div>
 
@@ -71,7 +71,7 @@
                          <strong>Reject Reason</strong>
                      </div>
                      <div class="col-sm-8">
-                         {{ $transportasi->reject_reason ?? 'Tidak ada keterangan' }}
+                         {{ $items->reject_reason ?? 'Tidak ada keterangan' }}
                      </div>
                  </div>
 
@@ -80,7 +80,7 @@
                          <strong>Approved By</strong>
                      </div>
                      <div class="col-sm-8">
-                         {{ $transportasi->approved_by ?? 'Belum Di Approved' }}
+                         {{ $items->approved_by ?? 'Belum Di Approved' }}
                      </div>
                  </div>
 
@@ -89,26 +89,26 @@
                          <strong>Approved At:</strong>
                      </div>
                      <div class="col-sm-8">
-                         {{ $transportasi->approved_at ?? 'Belum Di Approved' }}
+                         {{ $items->approved_at ?? 'Belum Di Approved' }}
                      </div>
                  </div>
                  {{-- Form Approval untuk Admin Kabupaten --}}
                  @if (
                      (auth()->user()->hasRole('admin_kabupaten') || auth()->user()->hasRole('superadmin')) &&
-                         $transportasi->status == 'Pending')
+                         $items->status == 'Pending')
                      <hr>
 
                      <div class="card-body">
                          {{-- PERBAIKAN ROUTE: tukar posisi table dan id --}}
-                         <form action="{{ route('approval', ['table' => 'transportasi', 'id' => $transportasi->id]) }}"
-                             method="POST" id="approvalForm{{ $transportasi->id }}">
+                         <form action="{{ route('approval', ['table' => 'items', 'id' => $items->id]) }}"
+                             method="POST" id="approvalForm{{ $items->id }}">
                              @csrf
                              @method('PUT')
                              <div class="mb-3">
-                                 <label for="approval_status{{ $transportasi->id }}" class="form-label">
+                                 <label for="approval_status{{ $items->id }}" class="form-label">
                                      <strong>Status Approval <span class="text-danger">*</span></strong>
                                  </label>
-                                 <select class="form-select" id="approval_status{{ $transportasi->id }}" name="status"
+                                 <select class="form-select" id="approval_status{{ $items->id }}" name="status"
                                      required>
                                      <option value="">-- Pilih Status --</option>
                                      <option value="Approved">Approve</option>
@@ -116,18 +116,18 @@
                                  </select>
                              </div>
 
-                             <div class="mb-3" id="reject_reason_container{{ $transportasi->id }}"
+                             <div class="mb-3" id="reject_reason_container{{ $items->id }}"
                                  style="display: none;">
-                                 <label for="reject_reason{{ $transportasi->id }}" class="form-label">
+                                 <label for="reject_reason{{ $items->id }}" class="form-label">
                                      <strong>Alasan Penolakan <span class="text-danger">*</span></strong>
                                  </label>
-                                 <textarea class="form-control" id="reject_reason{{ $transportasi->id }}" name="reject_reason" rows="3"
+                                 <textarea class="form-control" id="reject_reason{{ $items->id }}" name="reject_reason" rows="3"
                                      placeholder="Masukkan alasan penolakan..."></textarea>
                              </div>
 
                              <div class="d-grid gap-2">
                                  <button type="submit" class="btn btn-success"
-                                     onclick="return confirmApproval{{ $transportasi->id }}()">
+                                     onclick="return confirmApproval{{ $items->id }}()">
                                      <i class="fa fa-save"></i> Proses Approval
                                  </button>
                              </div>
@@ -136,9 +136,9 @@
 
 
                      <script>
-                         document.getElementById('approval_status{{ $transportasi->id }}').addEventListener('change', function() {
-                             const rejectContainer = document.getElementById('reject_reason_container{{ $transportasi->id }}');
-                             const rejectTextarea = document.getElementById('reject_reason{{ $transportasi->id }}');
+                         document.getElementById('approval_status{{ $items->id }}').addEventListener('change', function() {
+                             const rejectContainer = document.getElementById('reject_reason_container{{ $items->id }}');
+                             const rejectTextarea = document.getElementById('reject_reason{{ $items->id }}');
 
                              if (this.value === 'Rejected') {
                                  rejectContainer.style.display = 'block';
@@ -150,8 +150,8 @@
                              }
                          });
 
-                         function confirmApproval{{ $transportasi->id }}() {
-                             const status = document.getElementById('approval_status{{ $transportasi->id }}').value;
+                         function confirmApproval{{ $items->id }}() {
+                             const status = document.getElementById('approval_status{{ $items->id }}').value;
                              const message = status === 'Approved' ?
                                  'Apakah Anda yakin ingin menyetujui data ini?' :
                                  'Apakah Anda yakin ingin menolak data ini?';

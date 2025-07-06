@@ -38,7 +38,7 @@ class ProdukUnggulanDesa extends Controller
         $desas = Desa::all();
         $rtRwDesa = RtRwDesa::all();
 
-        return view('admin_desa.produk.create', compact('kategoris','produk', 'desas'));
+        return view('admin_desa.produk.create', compact('kategoris','produk', 'desas','rtRwDesa'));
     }
 
             public function getRtRw($desa_id): JsonResponse
@@ -82,8 +82,9 @@ class ProdukUnggulanDesa extends Controller
         $kategoris = Kategori::all();
         $produk = ProdukUnggulan::find($id);
         $desas = Desa::all();
+        $rtRwDesa = RtRwDesa::all();
 
-        return view('admin_desa.produk.edit', compact('kategoris','produk', 'desas'));
+        return view('admin_desa.produk.edit', compact('kategoris','produk', 'desas','rtRwDesa'));
     }
 
     /**
