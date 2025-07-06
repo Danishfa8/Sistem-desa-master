@@ -18,6 +18,7 @@ use App\Http\Controllers\AdminDesa\IndustriPenghasilLimbahDesaController;
 use App\Http\Controllers\AdminDesa\JalanDesaController;
 use App\Http\Controllers\AdminDesa\JalanKabupatenDesaController;
 use App\Http\Controllers\AdminDesa\JembatanDesaController;
+use App\Http\Controllers\admindesa\KebudayaanDesa;
 use App\Http\Controllers\AdminDesa\KerawananSosialDesaController;
 use App\Http\Controllers\AdminDesa\KondisiLingkunganKeluargaDesaController;
 use App\Http\Controllers\AdminDesa\LansiaDesaController;
@@ -26,12 +27,14 @@ use App\Http\Controllers\AdminDesa\PelakuUmkmDesaController;
 use App\Http\Controllers\AdminDesa\PendidikanDesaController;
 use App\Http\Controllers\AdminDesa\PengeluaranController;
 use App\Http\Controllers\AdminDesa\PerangkatDesaController;
+use App\Http\Controllers\admindesa\ProdukUnggulanDesa;
 use App\Http\Controllers\AdminDesa\SaranaIbadahDesaController;
 use App\Http\Controllers\AdminDesa\SaranaKesehatanDesaController;
 use App\Http\Controllers\AdminDesa\SaranaLainyaDesaController;
 use App\Http\Controllers\AdminDesa\SaranaPendukungKesehatanDesaController;
 use App\Http\Controllers\AdminDesa\SumberDayaAlamDesaController;
 use App\Http\Controllers\AdminDesa\TempatTinggalDesaController;
+use App\Http\Controllers\admindesa\TransportasiDesa;
 use App\Http\Controllers\AdminDesa\UsahaEkonomiController;
 use App\Models\PerangkatDesa;
 use Illuminate\Support\Facades\Route;
@@ -82,6 +85,9 @@ Route::middleware(['auth', 'role:admin_desa'])->group(function () {
         Route::resource('sarana-ibadah-desa', SaranaIbadahDesaController::class);
         Route::resource('sarana-lainya-desa', SaranaLainyaDesaController::class);
         Route::resource('ekonomi', EkonomiController::class);
+        Route::resource('budaya', KebudayaanDesa::class);
+        Route::resource('produk', ProdukUnggulanDesa::class);
+        Route::resource('transportasi', TransportasiDesa::class);
         Route::resource('usaha-ekonomi', UsahaEkonomiController::class);
 
         // Industri & Energi

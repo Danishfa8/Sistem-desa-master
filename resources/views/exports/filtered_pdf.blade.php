@@ -8,32 +8,36 @@
     </style>
 </head>
 <body>
-    <h2>Data Terfilter</h2>
+<h2>Data Terfilter {{ $categoryName }}</h2>
     <table>
         <thead>
             <tr>
                 <th>No</th>
-                <th>Kategori</th>
+                <th>Kecamatan</th>
                 <th>Desa</th>
-                <th>RT/RW</th>
-                <th>Jenis</th>
-                <th>Status</th>
-                <th>Tanggal Approve</th>
-                <th>Created By</th>
+                <th>RT</th>
+                <th>RW</th>
+                <th>Jenis Data</th>
+                @if(isset($data[0]->nama_kelompok_olahraga))
+                    <th>Nama Kelompok</th>
+                @endif
+                <th>Tahun</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($data as $i => $item)
-                <tr>
-                    <td>{{ $i+1 }}</td>
-                    <td>{{ $item->id_kategori }}</td>
-                    <td>{{ $item->desa_id }}</td>
-                    <td>{{ $item->rt_rw_desa_id }}</td>
-                    <td>{{ $item->jenis }}</td>
-                    <td>{{ $item->status }}</td>
-                    <td>{{ $item->approved_at }}</td>
-                    <td>{{ $item->created_by }}</td>
-                </tr>
+            <tr>
+                <td>{{ $i + 1 }}</td>
+                <td>{{ $item->nama_kecamatan }}</td>
+                <td>{{ $item->nama_desa }}</td>
+                <td>{{ $item->rt }}</td>
+                <td>{{ $item->rw }}</td>
+                <td>{{ $item->jenis }}</td>
+                @if(isset($item->nama_kelompok_olahraga))
+                    <td>{{ $item->nama_kelompok_olahraga }}</td>
+                @endif
+                <td>{{ $item->tahun }}</td>
+            </tr>
             @endforeach
         </tbody>
     </table>

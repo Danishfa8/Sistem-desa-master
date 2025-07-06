@@ -29,6 +29,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Transportasi extends Model
 {
+    protected $table = 'transportasi_desas';
     /**
      * The "booted" method is called when the model is being booted.
      * Here we add a global scope to filter the results based on the status.

@@ -14,6 +14,7 @@ use App\Http\Controllers\Superadmin\RtRwDesaController;
 use App\Http\Controllers\Superadmin\DeviceController;
 use App\Http\Controllers\Superadmin\DisabilitasDesaController;
 use App\Http\Controllers\Superadmin\EkonomiController;
+use App\Http\Controllers\Superadmin\KebudayaanDesa;
 use App\Http\Controllers\Superadmin\EnergiDesaController;
 use App\Http\Controllers\Superadmin\IndustriPenghasilLimbahDesaController;
 use App\Http\Controllers\Superadmin\JalanDesaController;
@@ -27,6 +28,7 @@ use App\Http\Controllers\Superadmin\PelakuUmkmDesaController;
 use App\Http\Controllers\Superadmin\PendidikanDesaController;
 use App\Http\Controllers\Superadmin\PengeluaranController;
 use App\Http\Controllers\Superadmin\PerangkatDesaController;
+use App\Http\Controllers\superadmin\ProdukUnggulanDesa;
 use App\Http\Controllers\Superadmin\SaranaIbadahDesaController;
 use App\Http\Controllers\Superadmin\SaranaKesehatanDesaController;
 use App\Http\Controllers\Superadmin\SaranaLainyaDesaController;
@@ -34,6 +36,7 @@ use App\Http\Controllers\Superadmin\SaranaPendukungKesehatanDesaController;
 use App\Http\Controllers\Superadmin\SettingwebsiteController;
 use App\Http\Controllers\Superadmin\SumberDayaAlamDesaController;
 use App\Http\Controllers\Superadmin\TempatTinggalDesaController;
+use App\Http\Controllers\superadmin\TransportasiDesa;
 use App\Http\Controllers\Superadmin\UsahaEkonomiController;
 use Illuminate\Support\Facades\Route;
 
@@ -84,6 +87,9 @@ Route::middleware(['auth', 'role:superadmin'])->group(function () {
         Route::resource('sarana-ibadah-desa', SaranaIbadahDesaController::class);
         Route::resource('sarana-lainya-desa', SaranaLainyaDesaController::class);
         Route::resource('ekonomi', EkonomiController::class);
+        Route::resource('budaya', KebudayaanDesa::class);
+        Route::resource('produk', ProdukUnggulanDesa::class);
+        Route::resource('transportasi', TransportasiDesa::class);
         Route::resource('usaha-ekonomi', UsahaEkonomiController::class);
         // Industri & Energi
         Route::resource('industri-penghasil-limbah-desa', IndustriPenghasilLimbahDesaController::class);
