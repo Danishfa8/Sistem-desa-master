@@ -29,6 +29,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class ProdukUnggulan extends Model
 {
+    protected $table = 'produk_unggulan_desas';
     /**
      * The "booted" method is called when the model is being booted.
      * Here we add a global scope to filter the results based on the status.
@@ -51,7 +52,7 @@ class ProdukUnggulan extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['id_kategori','desa_id', 'rt_rw_desa_id', 'tahun', 'jenis_produk', 'created_by', 'updated_by', 'status', 'reject_reason', 'approved_by', 'approved_at'];
+    protected $fillable = ['id_kategori','desa_id', 'rt_rw_desa_id', 'tahun', 'jenis_produk', 'nama_produk','created_by', 'updated_by', 'status', 'reject_reason', 'approved_by', 'approved_at'];
 
 
     /**

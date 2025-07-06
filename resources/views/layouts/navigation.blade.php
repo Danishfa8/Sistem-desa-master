@@ -135,6 +135,27 @@
                 </li>
 
                 <li class="nav-item">
+                    <a href="{{ url('superadmin/budaya') }}"
+                        class="nav-link {{ $current_url == 'superadmin/budaya' ? 'active' : '' }}">
+                        <i data-feather="settings"></i>Kebudayaan Desa
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ url('superadmin/produk') }}"
+                        class="nav-link {{ $current_url == 'superadmin/produk' ? 'active' : '' }}">
+                        <i data-feather="settings"></i>produk unggulan desa
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ url('superadmin/transportasi') }}"
+                        class="nav-link {{ $current_url == 'superadmin/transportasi' ? 'active' : '' }}">
+                        <i data-feather="settings"></i>Transportasi
+                    </a>
+                </li>
+
+                <li class="nav-item">
                     <a href="{{ url('superadmin/kondisi-lingkungan-keluarga-desa') }}"
                         class="nav-link {{ $current_url == 'superadmin/kondisi-lingkungan-keluarga-desa' ? 'active' : '' }}">
                         <i data-feather="settings"></i>Kondisi Lingkungan Keluarga

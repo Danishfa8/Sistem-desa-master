@@ -9,10 +9,12 @@ use Maatwebsite\Excel\Concerns\FromView;
 class FilteredExport implements FromView
 {
     protected $request;
+    protected $categoryName;
 
-    public function __construct($request)
+    public function __construct($request, $categoryName)
     {
         $this->request = $request;
+        $this->categoryName = $categoryName;
     }
 
     public function view(): View
@@ -21,8 +23,10 @@ class FilteredExport implements FromView
         $data = $controller->getFilteredData($this->request);
 
         return view('exports.filtered_excel', [
-            'data' => $data
+            'data' => $data,
+            'categoryName' => $this->categoryName
         ]);
     }
 }
+
 

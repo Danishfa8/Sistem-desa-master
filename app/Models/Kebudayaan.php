@@ -5,7 +5,7 @@ use App\Models\Scopes\StatusVisibilityScope;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class TempatTinggalDesa
+ * Class Kebudayaan Desa
  *
  * @property $id
  * @property $id_kategori
@@ -29,6 +29,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Kebudayaan extends Model
 {
+    protected $table = 'kebudayaan_desas';
     /**
      * The "booted" method is called when the model is being booted.
      * Here we add a global scope to filter the results based on the status.
@@ -51,7 +52,7 @@ class Kebudayaan extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['id_kategori','desa_id', 'rt_rw_desa_id', 'tahun', 'jenis_kebudayaan', 'created_by', 'updated_by', 'status', 'reject_reason', 'approved_by', 'approved_at'];
+    protected $fillable = ['id_kategori','desa_id', 'rt_rw_desa_id', 'tahun', 'jenis_kebudayaan', 'nama_kebudayaan','created_by', 'updated_by', 'status', 'reject_reason', 'approved_by', 'approved_at'];
 
 
     /**

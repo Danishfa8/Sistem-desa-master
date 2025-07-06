@@ -147,6 +147,8 @@ class DataAngkaController extends Controller
                 'desa_id' => 'required'
             ]);
 
+            $desa_id = $request->desa_id;
+            $kecamatan_id = $request->kecamatan_id;
             $year = $request->year;
             $category_id = $request->category_id;
             $desaId = $request->desa_id;
@@ -260,24 +262,36 @@ class DataAngkaController extends Controller
             $columns = $config['columns'];
             $groupBys = $config['groupBy'];
             $groupingKey = $columns[0];
-
+            
+            $table = (new $model)->getTable();
             $query = $model::query()
-                ->selectRaw("{$groupingKey} as jenis_grouping, COUNT(*) as total")
+                ->selectRaw("$groupingKey as jenis_grouping, COUNT(*) as total")
+                ->addSelect('desas.nama_desa', 'kecamatans.nama_kecamatan')
+                ->join('desas', 'desas.id', '=', "$table.desa_id")
+                ->join('kecamatans', 'kecamatans.id', '=', 'desas.kecamatan_id')
                 ->where('tahun', $year)
-                ->where('desa_id', $desaId);
+                ->where("$table.desa_id", $desaId);
 
-            // Jika tabel menggunakan kolom id_kategori
-            if ($config['filter_kategori'] && Schema::hasColumn((new $model)->getTable(), 'id_kategori')) {
-                $query->where('id_kategori', $request->category_id ?? 1); // Default ke 1 jika tidak dikirim
+            if ($config['filter_kategori'] && Schema::hasColumn($table, 'id_kategori')) {
+                $query->where('id_kategori', $category_id);
             }
 
-            $query->groupBy($groupingKey);
+            $query->groupBy($groupingKey, 'desas.nama_desa', 'kecamatans.nama_kecamatan');
 
             $data = $query->get();
 
+            $kategori = Kategori::find($category_id);
+            $desa = Desa::find($desa_id);
+            $kecamatan = Kecamatan::find($kecamatan_id);
+
             return response()->json([
                 'data' => $data,
-                'header_column' => $columns[0]
+                'header_column' => $columns[0],
+                'show_location' => true,
+                'nama_kategori' => $kategori->nama ?? '-',
+                'nama_desa' => $desa->nama_desa ?? '-',
+                'nama_kecamatan' => $kecamatan->nama_kecamatan ?? '-',
+                'tahun' => $year,
             ]);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -414,10 +428,15 @@ class DataAngkaController extends Controller
         $config = $mapping[$category_id];
         $model = $config['model'];
         $groupingKey = $config['columns'][0];
+        $table = (new $model)->getTable();
 
-        $data = $model::where('desa_id', $desa_id)
-            ->where('tahun', $year)
-            ->where($groupingKey, $jenis);
+        $data = $model::select("$table.*", 'desas.nama_desa', 'kecamatans.nama_kecamatan', 'rt_rw_desas.rt', 'rt_rw_desas.rw')
+        ->join('desas', 'desas.id', '=', "$table.desa_id")
+        ->join('kecamatans', 'kecamatans.id', '=', 'desas.kecamatan_id')
+        ->join('rt_rw_desas', 'rt_rw_desas.id', '=', "$table.rt_rw_desa_id")
+        ->where("$table.desa_id", $desa_id)
+        ->where("$table.tahun", $year)
+        ->where("$table.$groupingKey", $jenis);
 
         if ($config['filter_kategori'] && Schema::hasColumn((new $model)->getTable(), 'id_kategori')) {
             $data->where('id_kategori', $category_id);
@@ -429,7 +448,7 @@ class DataAngkaController extends Controller
     }
 
     // cetak download
-    public function downloadPdf(Request $request)
+public function downloadPdf(Request $request)
 {
     $request->validate([
         'category_id' => 'required',
@@ -438,9 +457,14 @@ class DataAngkaController extends Controller
     ]);
 
     $data = $this->getFilteredData($request);
-    $pdf = PDF::loadView('exports.filtered_pdf', ['data' => $data]);
+    $categoryName = self::$categoryLabels[$request->category_id] ?? 'kategori';
 
-    return $pdf->download('filtered-data.pdf');
+    $pdf = PDF::loadView('exports.filtered_pdf', [
+        'data' => $data,
+        'categoryName' => $categoryName
+    ]);
+
+    return $pdf->download('data-' . strtolower(str_replace(' ', '-', $categoryName)) . '.pdf');
 }
 
 public function downloadExcel(Request $request)
@@ -451,8 +475,14 @@ public function downloadExcel(Request $request)
         'year' => 'required',
     ]);
 
-    return Excel::download(new FilteredExport($request), 'filtered-data.xlsx');
+    $categoryName = self::$categoryLabels[$request->category_id] ?? 'kategori';
+
+    return Excel::download(
+        new FilteredExport($request, $categoryName),
+        'data-' . strtolower(str_replace(' ', '-', $categoryName)) . '.xlsx'
+    );
 }
+
 
 // filter download
 public function getFilteredData($request)
@@ -558,7 +588,7 @@ public function getFilteredData($request)
                         'groupBy' => ['jenis_kondisi'],
                         'filter_kategori' => true,
                     ],
-        ];
+    ];
 
     if (!isset($mapping[$category_id])) {
         abort(404, 'Kategori tidak ditemukan');
@@ -567,18 +597,48 @@ public function getFilteredData($request)
     $config = $mapping[$category_id];
     $model = $config['model'];
     $groupingKey = $config['columns'][0];
+    $table = (new $model)->getTable();
 
-    $query = $model::where('desa_id', $desa_id)->where('tahun', $year);
-    if ($config['filter_kategori'] && Schema::hasColumn((new $model)->getTable(), 'id_kategori')) {
+    $query = $model::select(
+        "$table.tahun",
+        'kecamatans.nama_kecamatan',
+        'desas.nama_desa',
+        'rt_rw_desas.rt',
+        'rt_rw_desas.rw',
+        "$table.$groupingKey as jenis",
+        ...array_slice($config['columns'], 1)
+    )
+    ->join('desas', 'desas.id', '=', "$table.desa_id")
+    ->join('kecamatans', 'kecamatans.id', '=', 'desas.kecamatan_id')
+    ->join('rt_rw_desas', 'rt_rw_desas.id', '=', "$table.rt_rw_desa_id")
+    ->where("$table.desa_id", $desa_id)
+    ->where("$table.tahun", $year);
+
+    if ($config['filter_kategori'] && Schema::hasColumn($table, 'id_kategori')) {
         $query->where('id_kategori', $category_id);
     }
 
-    return $query->get([
-        'id_kategori', 'desa_id', 'rt_rw_desa_id',
-        $groupingKey . ' as jenis',
-        'status', 'approved_at', 'created_by'
-    ]);
+    return $query->get();
 }
 
+//label kategori
+protected static $categoryLabels = [
+    1 => 'Kelembagaan Desa',
+    3 => 'Kerawanan Sosial Desa',
+    4 => 'Sarana Lainnya Desa',
+    5 => 'Tempat Tinggal Desa',
+    6 => 'Sumber Daya Alam Desa',
+    7 => 'Energi Desa',
+    8 => 'Olahraga Desa',
+    9 => 'Ekonomi Desa',
+    10 => 'Sarana Pendukung Kesehatan Desa',
+    11 => 'Sarana Kesehatan Desa',
+    12 => 'Transportasi Desa',
+    13 => 'Usaha Ekonomi Desa',
+    14 => 'Produk Unggulan Desa',
+    15 => 'Kebudayaan Desa',
+    16 => 'Industri Limbah Desa',
+    17 => 'Kondisi Lingkungan Keluarga Desa',
+];
 
 }
