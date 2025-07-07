@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\OlahragaDesaRequest;
 use App\Models\Desa;
+use App\Models\Kategori;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
@@ -29,10 +30,11 @@ class OlahragaDesaController extends Controller
      */
     public function create(): View
     {
+        $kategoris = Kategori::all();
         $olahragaDesa = new OlahragaDesa();
         $desas = Desa::all();
 
-        return view('superadmin.olahraga-desa.create', compact('olahragaDesa', 'desas'));
+        return view('superadmin.olahraga-desa.create', compact('kategoris','olahragaDesa', 'desas'));
     }
 
     /**
@@ -61,10 +63,11 @@ class OlahragaDesaController extends Controller
      */
     public function edit($id): View
     {
+        $kategoris = Kategori::all();
         $olahragaDesa = OlahragaDesa::find($id);
         $desas = Desa::all();
 
-        return view('superadmin.olahraga-desa.edit', compact('olahragaDesa', 'desas'));
+        return view('superadmin.olahraga-desa.edit', compact('kategoris','olahragaDesa', 'desas'));
     }
 
     /**

@@ -123,6 +123,27 @@
 </li>
 
 <li class="nav-item">
+    <a href="{{ url('admin_desa/budaya') }}"
+        class="nav-link {{ $current_url == 'admin_desa/budaya' ? 'active' : '' }}">
+        <i data-feather="settings"></i>Kebudayaan Desa
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="{{ url('admin_desa/produk') }}"
+        class="nav-link {{ $current_url == 'admin_desa/produk' ? 'active' : '' }}">
+        <i data-feather="settings"></i>produk unggulan desa
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="{{ url('admin_desa/transportasi') }}"
+        class="nav-link {{ $current_url == 'admin_desa/transportasi' ? 'active' : '' }}">
+        <i data-feather="settings"></i>Transportasi
+    </a>
+</li>
+
+<li class="nav-item">
     <a href="{{ url('admin_desa/kondisi-lingkungan-keluarga-desa') }}"
         class="nav-link {{ $current_url == 'admin_desa/kondisi-lingkungan-keluarga-desa' ? 'active' : '' }}">
         <i data-feather="settings"></i>Kondisi Lingkungan Keluarga

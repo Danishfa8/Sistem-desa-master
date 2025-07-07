@@ -6,26 +6,46 @@ use App\Models\Bumde;
 use Illuminate\Http\Request;
 use App\Models\Kecamatan;
 use App\Models\Desa;
+use App\Models\Ekonomi;
+use App\Models\EnergiDesa;
+use App\Models\IndustriPenghasilLimbahDesa;
 use App\Models\JalanDesa;
 use App\Models\JalanKabupatenDesa;
 use App\Models\JembatanDesa;
+use App\Models\Kategori;
+use App\Models\Kebudayaan;
 use App\Models\KelembagaanDesa;
 use App\Models\KerawananSosialDesa;
+use App\Models\KondisiLingkunganKeluargaDesa;
+use App\Models\OlahragaDesa;
 use App\Models\PkkDesa;
+use App\Models\ProdukUnggulan;
+use App\Models\SaranaKesehatanDesa;
+use App\Models\SaranaLainyaDesa;
+use App\Models\SaranaPendukungKesehatanDesa;
+use App\Models\SumberDayaAlamDesa;
+use App\Models\TempatTinggalDesa;
+use App\Models\Transportasi;
+use App\Models\UsahaEkonomi;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\FilteredExport;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class DataAngkaController extends Controller
 {
     public function index()
     {
         $kecamatans = Kecamatan::all();
-        return view('web.data-angka', compact('kecamatans'));
+        $kategoris = Kategori::all();
+        return view('web.data-angka', compact('kecamatans', 'kategoris'));
     }
 
     /**
-     * AJAX endpoint untuk mendapatkan data berdasarkan kategori dan tahun
+     * AJAX endpoint untuk mendapatkan data berdasarkan kategori dan kolom tahun di semua tabel
      */
     public function getDataByCategory(Request $request)
     {
@@ -34,99 +54,11 @@ class DataAngkaController extends Controller
             $category = $request->category;
             $data = [];
 
-            // Log untuk debugging
-            Log::info('GetDataByCategory called with:', [
-                'year' => $year,
-                'category' => $category
-            ]);
-
-            switch ($category) {
-                case 'kelembagaan':
-                    // Tampilkan semua opsi kelembagaan yang tersedia
-                    $data = [
-                        [
-                            'key' => 'kelembagaan',
-                            'label' => 'Kelembagaan Desa'
-                        ],
-                        [
-                            'key' => 'pkk_desas',
-                            'label' => 'PKK Desa'
-                        ]
-                        // Uncomment if you want to add BUMDes
-                        // ,[
-                        //     'key' => 'bumdes',
-                        //     'label' => 'BUMDes'
-                        // ]
-                    ];
-
-                    // Log untuk debugging - cek apakah ada data untuk masing-masing
-                    $kelembagaanCount = KelembagaanDesa::whereYear('created_at', $year)
-                        ->where('status', 'Approved')
-                        ->count();
-                    Log::info('Kelembagaan count for year ' . $year . ':', ['count' => $kelembagaanCount]);
-
-                    $pkkDesaCount = PkkDesa::whereYear('created_at', $year)
-                        ->where('status', 'Approved')
-                        ->count();
-                    Log::info('PKK Desa count for year ' . $year . ':', ['count' => $pkkDesaCount]);
-                    break;
-
-                case 'sosial':
-                    // Tampilkan semua opsi sosial yang tersedia
-                    $data = [
-                        [
-                            'key' => 'kerawanan_sosial_desas',
-                            'label' => 'Kerawanan Sosial Desa'
-                        ]
-                    ];
-
-                    // Log untuk debugging
-                    $sosialCount = KerawananSosialDesa::whereYear('created_at', $year)
-                        ->where('status', 'Approved')
-                        ->count();
-                    Log::info('Kerawanan Sosial count for year ' . $year . ':', ['count' => $sosialCount]);
-                    break;
-
-                case 'infrastruktur':
-                    // Tampilkan semua opsi infrastruktur yang tersedia
-                    $data = [
-                        [
-                            'key' => 'jalan_desa',
-                            'label' => 'Jalan Desa'
-                        ],
-                        [
-                            'key' => 'jalan_kabupaten',
-                            'label' => 'Jalan Kabupaten'
-                        ],
-                        [
-                            'key' => 'jembatan',
-                            'label' => 'Jembatan Desa'
-                        ]
-                    ];
-
-                    // Log untuk debugging - cek apakah ada data untuk masing-masing
-                    $jalanDesaCount = JalanDesa::whereYear('created_at', $year)
-                        ->where('status', 'Approved')
-                        ->count();
-                    Log::info('Jalan Desa count for year ' . $year . ':', ['count' => $jalanDesaCount]);
-
-                    $jalanKabCount = JalanKabupatenDesa::whereYear('created_at', $year)
-                        ->where('status', 'Approved')
-                        ->count();
-                    Log::info('Jalan Kabupaten count for year ' . $year . ':', ['count' => $jalanKabCount]);
-
-                    $jembatanCount = JembatanDesa::whereYear('created_at', $year)
-                        ->where('status', 'Approved')
-                        ->count();
-                    Log::info('Jembatan count for year ' . $year . ':', ['count' => $jembatanCount]);
-                    break;
-
-                default:
-                    $data = [];
+            if (!$year || !$category) {
+                return response()->json([], 200);
             }
 
-            Log::info('Final data result:', ['data' => $data]);
-            return response()->json($data);
+            // return response()->json($data);
         } catch (Exception $e) {
             Log::error('Error in getDataByCategory:', [
                 'message' => $e->getMessage(),
@@ -154,6 +86,52 @@ class DataAngkaController extends Controller
             return response()->json(['error' => 'Error loading desa: ' . $e->getMessage()], 500);
         }
     }
+    public function getTahunByDesa(Request $request)
+    {
+        try {
+            $desa_id = $request->desa_id;
+            $category_id = $request->category_id;
+
+            if (!$desa_id || !$category_id) {
+                return response()->json([], 200);
+            }
+
+            // Mapping kategori ID ke model
+            $mapKategoriModel = [
+                1 => \App\Models\KelembagaanDesa::class,
+                3 => \App\Models\KerawananSosialDesa::class,
+                4 => SaranaLainyaDesa::class,
+                5 => TempatTinggalDesa::class,
+                6 => SumberDayaAlamDesa::class,
+                7 => EnergiDesa::class,
+                8 => OlahragaDesa::class,
+                9 => Ekonomi::class,
+                10 => SaranaPendukungKesehatanDesa::class,
+                11 => SaranaKesehatanDesa::class,
+                12 => Transportasi::class,
+                13 => UsahaEkonomi::class,
+                14 => ProdukUnggulan::class,
+                15 => Kebudayaan::class,
+                16 => IndustriPenghasilLimbahDesa::class,
+                17 => KondisiLingkunganKeluargaDesa::class,
+            ];
+
+            if (!isset($mapKategoriModel[$category_id])) {
+                return response()->json(['error' => 'Kategori tidak dikenali'], 400);
+            }
+
+            $model = $mapKategoriModel[$category_id];
+            $tahunList = $model::where('desa_id', $desa_id)
+                ->where('id_kategori', $category_id)
+                ->distinct()
+                ->orderBy('tahun', 'desc')
+                ->pluck('tahun');
+
+            return response()->json($tahunList);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Gagal mengambil tahun: ' . $e->getMessage()], 500);
+        }
+    }
 
     /**
      * Get final result based on all filters
@@ -161,161 +139,506 @@ class DataAngkaController extends Controller
     public function getResult(Request $request)
     {
         try {
-            // Validate required parameters
+            // Validasi input
             $request->validate([
                 'year' => 'required',
-                'category' => 'required',
-                'data_type' => 'required',
+                'category_id' => 'required',
                 'kecamatan_id' => 'required',
                 'desa_id' => 'required'
             ]);
 
-            $year = $request->year;
-            $category = $request->category;
-            $data_type = $request->data_type;
-            $kecamatan_id = $request->kecamatan_id;
             $desa_id = $request->desa_id;
+            $kecamatan_id = $request->kecamatan_id;
+            $year = $request->year;
+            $category_id = $request->category_id;
+            $desaId = $request->desa_id;
 
-            $result = [];
+            // Mapping kategori ke model dan konfigurasi kolom
+            $mapping = [
+                1 => [ // ID kategori kelembagaan
+                    'model' => \App\Models\KelembagaanDesa::class,
+                    'columns' => ['jenis_kelembagaan'],
+                    'groupBy' => ['jenis_kelembagaan'],
+                    'filter_kategori' => true,
+                ],
+                3 => [ // ID kategori kerawanan sosial
+                    'model' => \App\Models\KerawananSosialDesa::class,
+                    'columns' => ['jenis_kerawanan'],
+                    'groupBy' => ['jenis_kerawanan'],
+                    'filter_kategori' => true,
+                ],
+                4 => [ 
+                    'model' => \App\Models\SaranaLainyaDesa::class,
+                    'columns' => ['jenis_sarana_lainnya'],
+                    'groupBy' => ['jenis_sarana_lainnya'],
+                    'filter_kategori' => true,
+                ],
+                5 => [
+                    'model' => \App\Models\TempatTinggalDesa::class,
+                    'columns' => ['jenis_tempat_tinggal'],
+                    'groupBy' => ['jenis_tempat_tinggal'],
+                    'filter_kategori' => true,
+                ],
+                6 => [
+                    'model' => \App\Models\SumberDayaAlamDesa::class,
+                    'columns' => ['jenis_sumber_daya_alam'],
+                    'groupBy' => ['jenis_sumber_daya_alam'],
+                    'filter_kategori' => true,
+                ],
+                7 => [
+                    'model' => \App\Models\EnergiDesa::class,
+                    'columns' => ['jenis_energi'],
+                    'groupBy' => ['jenis_energi'],
+                    'filter_kategori' => true,
+                ],
+                8 => [
+                    'model' => \App\Models\OlahragaDesa::class,
+                    'columns' => ['jenis_olahraga'],
+                    'groupBy' => ['jenis_olahraga'],
+                    'filter_kategori' => true,
+                ],
+                9 => [
+                    'model' => \App\Models\Ekonomi::class,
+                    'columns' => ['jenis'],
+                    'groupBy' => ['jenis'],
+                    'filter_kategori' => true,
+                ],
+                10 => [
+                    'model' => \App\Models\SaranaPendukungKesehatanDesa::class,
+                    'columns' => ['jenis_sarana'],
+                    'groupBy' => ['jenis_sarana'],
+                    'filter_kategori' => true,
+                ],
+                11 => [
+                    'model' => \App\Models\SaranaKesehatanDesa::class,
+                    'columns' => ['jenis_sarana'],
+                    'groupBy' => ['jenis_sarana'],
+                    'filter_kategori' => true,
+                ],
+                12 => [
+                    'model' => \App\Models\Transportasi::class,
+                    'columns' => ['jenis_transportasi'],
+                    'groupBy' => ['jenis_transportasi'],
+                    'filter_kategori' => true,
+                ],
+                13 => [
+                    'model' => \App\Models\UsahaEkonomi::class,
+                    'columns' => ['nama_usaha'],
+                    'groupBy' => ['nama_usaha'],
+                    'filter_kategori' => true,
+                ],
+                14 => [
+                    'model' => \App\Models\ProdukUnggulan::class,
+                    'columns' => ['jenis_produk'],
+                    'groupBy' => ['jenis_produk'],
+                    'filter_kategori' => true,
+                ],
+                15 => [
+                    'model' => \App\Models\Kebudayaan::class,
+                    'columns' => ['jenis_kebudayaan'],
+                    'groupBy' => ['jenis_kebudayaan'],
+                    'filter_kategori' => true,
+                ],
+                16 => [
+                    'model' => \App\Models\IndustriPenghasilLimbahDesa::class,
+                    'columns' => ['jenis_industri'],
+                    'groupBy' => ['jenis_industri'],
+                    'filter_kategori' => true,
+                ],
+                17 => [
+                    'model' => \App\Models\KondisiLingkunganKeluargaDesa::class,
+                    'columns' => ['jenis_kondisi'],
+                    'groupBy' => ['jenis_kondisi'],
+                    'filter_kategori' => true,
+                ],
+            ];
 
-            // Log untuk debugging
-            Log::info('GetResult Parameters:', [
-                'year' => $year,
-                'category' => $category,
-                'data_type' => $data_type,
-                'kecamatan_id' => $kecamatan_id,
-                'desa_id' => $desa_id
-            ]);
-
-            // Determine which table to query based on data_type
-            switch ($data_type) {
-                case 'kelembagaan':
-                    // Query berdasarkan desa_id saja dengan status approved
-                    if (Schema::hasColumn('kelembagaan_desas', 'tahun')) {
-                        $result = KelembagaanDesa::whereYear('tahun', $year)
-                            ->where('desa_id', $desa_id)
-                            ->where('status', 'Approved')
-                            ->get();
-                    } else {
-                        $result = KelembagaanDesa::whereYear('created_at', $year)
-                            ->where('desa_id', $desa_id)
-                            ->where('status', 'Approved')
-                            ->get();
-                    }
-                    break;
-
-                case 'jalan_desa':
-                    // Cek apakah tabel memiliki kecamatan_id
-                    if (Schema::hasColumn('jalan_desas', 'kecamatan_id')) {
-                        $result = JalanDesa::whereYear('created_at', $year)
-                            ->where('kecamatan_id', $kecamatan_id)
-                            ->where('desa_id', $desa_id)
-                            ->where('status', 'Approved')
-                            ->get();
-                    } else {
-                        $result = JalanDesa::whereYear('created_at', $year)
-                            ->where('desa_id', $desa_id)
-                            ->where('status', 'Approved')
-                            ->get();
-                    }
-                    break;
-
-                case 'jalan_kabupaten':
-                    // Cek apakah tabel memiliki kecamatan_id
-                    if (Schema::hasColumn('jalan_kabupaten_desas', 'kecamatan_id')) {
-                        $result = JalanKabupatenDesa::whereYear('created_at', $year)
-                            ->where('kecamatan_id', $kecamatan_id)
-                            ->where('desa_id', $desa_id)
-                            ->where('status', 'Approved')
-                            ->get();
-                    } else {
-                        $result = JalanKabupatenDesa::whereYear('created_at', $year)
-                            ->where('desa_id', $desa_id)
-                            ->where('status', 'Approved')
-                            ->get();
-                    }
-                    break;
-
-                case 'jembatan':
-                    // Cek apakah tabel memiliki kecamatan_id
-                    if (Schema::hasColumn('jembatan_desas', 'kecamatan_id')) {
-                        $result = JembatanDesa::whereYear('created_at', $year)
-                            ->where('kecamatan_id', $kecamatan_id)
-                            ->where('desa_id', $desa_id)
-                            ->where('status', 'Approved')
-                            ->get();
-                    } else {
-                        $result = JembatanDesa::whereYear('created_at', $year)
-                            ->where('desa_id', $desa_id)
-                            ->where('status', 'Approved')
-                            ->get();
-                    }
-                    break;
-
-                case 'kerawanan_sosial_desas':
-                    // Cek apakah tabel memiliki kecamatan_id
-                    if (Schema::hasColumn('kerawanan_sosial_desas', 'kecamatan_id')) {
-                        $result = KerawananSosialDesa::whereYear('created_at', $year)
-                            ->where('kecamatan_id', $kecamatan_id)
-                            ->where('desa_id', $desa_id)
-                            ->where('status', 'Approved')
-                            ->get();
-                    } else {
-                        $result = KerawananSosialDesa::whereYear('created_at', $year)
-                            ->where('desa_id', $desa_id)
-                            ->where('status', 'Approved')
-                            ->get();
-                    }
-                    break;
-
-                case 'pkk_desas':
-                    // Cek apakah tabel memiliki kecamatan_id
-                    if (Schema::hasColumn('pkk_desas', 'kecamatan_id')) {
-                        $result = PkkDesa::whereYear('created_at', $year)
-                            ->where('kecamatan_id', $kecamatan_id)
-                            ->where('desa_id', $desa_id)
-                            ->where('status', 'Approved')
-                            ->get();
-                    } else {
-                        $result = PkkDesa::whereYear('created_at', $year)
-                            ->where('desa_id', $desa_id)
-                            ->where('status', 'Approved')
-                            ->get();
-                    }
-                    break;
-
-
-                // case 'bumdes':
-                //     if (Schema::hasColumn('bumdes', 'kecamatan_id')) {
-                //         $result = Bumde::whereYear('created_at', $year)
-                //             ->where('kecamatan_id', $kecamatan_id)
-                //             ->where('desa_id', $desa_id)
-                //             ->where('status', 'Approved')
-                //             ->get();
-                //     } else {
-                //         $result = Bumde::whereYear('created_at', $year)
-                //             ->where('desa_id', $desa_id)
-                //             ->where('status', 'Approved')
-                //             ->get();
-                //     }
-                //     break;
-
-                default:
-                    throw new Exception("Unknown data type: {$data_type}");
+            if (!isset($mapping[$category_id])) {
+                return response()->json(['error' => 'Kategori tidak dikenali'], 400);
             }
 
-            Log::info('Query Result Count:', ['count' => $result->count()]);
+            $config = $mapping[$category_id];
+            $model = $config['model'];
+            $columns = $config['columns'];
+            $groupBys = $config['groupBy'];
+            $groupingKey = $columns[0];
+            
+            $table = (new $model)->getTable();
+            $query = $model::query()
+                ->selectRaw("$groupingKey as jenis_grouping, COUNT(*) as total")
+                ->addSelect('desas.nama_desa', 'kecamatans.nama_kecamatan')
+                ->join('desas', 'desas.id', '=', "$table.desa_id")
+                ->join('kecamatans', 'kecamatans.id', '=', 'desas.kecamatan_id')
+                ->where('tahun', $year)
+                ->where("$table.desa_id", $desaId);
 
-            return response()->json($result);
+            if ($config['filter_kategori'] && Schema::hasColumn($table, 'id_kategori')) {
+                $query->where('id_kategori', $category_id);
+            }
+
+            $query->groupBy($groupingKey, 'desas.nama_desa', 'kecamatans.nama_kecamatan');
+
+            $data = $query->get();
+
+            $kategori = Kategori::find($category_id);
+            $desa = Desa::find($desa_id);
+            $kecamatan = Kecamatan::find($kecamatan_id);
+
+            return response()->json([
+                'data' => $data,
+                'header_column' => $columns[0],
+                'show_location' => true,
+                'nama_kategori' => $kategori->nama ?? '-',
+                'nama_desa' => $desa->nama_desa ?? '-',
+                'nama_kecamatan' => $kecamatan->nama_kecamatan ?? '-',
+                'tahun' => $year,
+            ]);
+
         } catch (\Illuminate\Validation\ValidationException $e) {
-            return response()->json(['error' => 'Validation failed', 'details' => $e->errors()], 422);
-        } catch (Exception $e) {
-            Log::error('Error in getResult:', [
+            return response()->json(['error' => 'Validasi gagal', 'details' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            Log::error('Gagal mengambil data desa dalam angka', [
                 'message' => $e->getMessage(),
                 'line' => $e->getLine(),
                 'file' => $e->getFile()
             ]);
-            return response()->json(['error' => 'Error loading result: ' . $e->getMessage()], 500);
+
+            return response()->json(['error' => 'Terjadi kesalahan saat mengambil data'], 500);
         }
     }
+
+    public function detailResult(Request $request)
+    {
+        $request->validate([
+            'category_id' => 'required',
+            'desa_id' => 'required',
+            'year' => 'required',
+            'jenis' => 'required',
+        ]);
+
+        $category_id = $request->category_id;
+        $desa_id = $request->desa_id;
+        $year = $request->year;
+        $jenis = $request->jenis;
+
+        $mapping = [
+                    1 => [ // ID kategori kelembagaan
+                        'model' => \App\Models\KelembagaanDesa::class,
+                        'columns' => ['jenis_kelembagaan', 'nama_kelembagaan'],
+                        'groupBy' => ['jenis_kelembagaan', 'nama_kelembagaan'],
+                        'filter_kategori' => true,
+                    ],
+                    3 => [ // ID kategori kerawanan sosial
+                        'model' => \App\Models\KerawananSosialDesa::class,
+                        'columns' => ['jenis_kerawanan'],
+                        'groupBy' => ['jenis_kerawanan'],
+                        'filter_kategori' => true,
+                    ],
+                    4 => [ 
+                        'model' => \App\Models\SaranaLainyaDesa::class,
+                        'columns' => ['jenis_sarana_lainnya','nama_sarana_lainnya'],
+                        'groupBy' => ['jenis_sarana_lainnya','nama_sarana_lainnya'],
+                        'filter_kategori' => true,
+                    ],
+                    5 => [
+                        'model' => \App\Models\TempatTinggalDesa::class,
+                        'columns' => ['jenis_tempat_tinggal'],
+                        'groupBy' => ['jenis_tempat_tinggal'],
+                        'filter_kategori' => true,
+                    ],
+                    6 => [
+                        'model' => \App\Models\SumberDayaAlamDesa::class,
+                        'columns' => ['jenis_sumber_daya_alam'],
+                        'groupBy' => ['jenis_sumber_daya_alam'],
+                        'filter_kategori' => true,
+                    ],
+                    7 => [
+                        'model' => \App\Models\EnergiDesa::class,
+                        'columns' => ['jenis_energi'],
+                        'groupBy' => ['jenis_energi'],
+                        'filter_kategori' => true,
+                    ],
+                    8 => [
+                        'model' => \App\Models\OlahragaDesa::class,
+                        'columns' => ['jenis_olahraga','nama_kelompok_olahraga'],
+                        'groupBy' => ['jenis_olahraga','nama_kelompok_olahraga'],
+                        'filter_kategori' => true,
+                    ],
+                    9 => [
+                        'model' => \App\Models\Ekonomi::class,
+                        'columns' => ['jenis','nama','pemilik'],
+                        'groupBy' => ['jenis','nama','pemilik'],
+                        'filter_kategori' => true,
+                    ],
+                    10 => [
+                        'model' => \App\Models\SaranaPendukungKesehatanDesa::class,
+                        'columns' => ['jenis_sarana'],
+                        'groupBy' => ['jenis_sarana'],
+                        'filter_kategori' => true,
+                    ],
+                    11 => [
+                        'model' => \App\Models\SaranaKesehatanDesa::class,
+                        'columns' => ['jenis_sarana'],
+                        'groupBy' => ['jenis_sarana'],
+                        'filter_kategori' => true,
+                    ],
+                    12 => [
+                        'model' => \App\Models\Transportasi::class,
+                        'columns' => ['jenis_transportasi'],
+                        'groupBy' => ['jenis_transportasi'],
+                        'filter_kategori' => true,
+                    ],
+                    13 => [
+                        'model' => \App\Models\UsahaEkonomi::class,
+                        'columns' => ['nama_usaha','luas'],
+                        'groupBy' => ['nama_usaha','luas'],
+                        'filter_kategori' => true,
+                    ],
+                    14 => [
+                        'model' => \App\Models\ProdukUnggulan::class,
+                        'columns' => ['jenis_produk','nama_produk'],
+                        'groupBy' => ['jenis_produk','nama_produk'],
+                        'filter_kategori' => true,
+                    ],
+                    15 => [
+                        'model' => \App\Models\Kebudayaan::class,
+                        'columns' => ['jenis_kebudayaan','nama_kebudayaan'],
+                        'groupBy' => ['jenis_kebudayaan','nama_kebudayaan'],
+                        'filter_kategori' => true,
+                    ],
+                    16 => [
+                        'model' => \App\Models\IndustriPenghasilLimbahDesa::class,
+                        'columns' => ['jenis_industri'],
+                        'groupBy' => ['jenis_industri'],
+                        'filter_kategori' => true,
+                    ],
+                    17 => [
+                        'model' => \App\Models\KondisiLingkunganKeluargaDesa::class,
+                        'columns' => ['jenis_kondisi'],
+                        'groupBy' => ['jenis_kondisi'],
+                        'filter_kategori' => true,
+                    ],
+        ];
+
+        
+        if (!isset($mapping[$category_id])) {
+            return response()->json(['error' => 'Kategori tidak dikenali'], 400);
+        }
+
+        $config = $mapping[$category_id];
+        $model = $config['model'];
+        $groupingKey = $config['columns'][0];
+        $table = (new $model)->getTable();
+
+        $data = $model::select("$table.*", 'desas.nama_desa', 'kecamatans.nama_kecamatan', 'rt_rw_desas.rt', 'rt_rw_desas.rw')
+        ->join('desas', 'desas.id', '=', "$table.desa_id")
+        ->join('kecamatans', 'kecamatans.id', '=', 'desas.kecamatan_id')
+        ->join('rt_rw_desas', 'rt_rw_desas.id', '=', "$table.rt_rw_desa_id")
+        ->where("$table.desa_id", $desa_id)
+        ->where("$table.tahun", $year)
+        ->where("$table.$groupingKey", $jenis);
+
+        if ($config['filter_kategori'] && Schema::hasColumn((new $model)->getTable(), 'id_kategori')) {
+            $data->where('id_kategori', $category_id);
+        }
+
+        $result = $data->get();
+
+        return response()->json($result);
+    }
+
+    // cetak download
+public function downloadPdf(Request $request)
+{
+    $request->validate([
+        'category_id' => 'required',
+        'desa_id' => 'required',
+        'year' => 'required',
+    ]);
+
+    $data = $this->getFilteredData($request);
+    $categoryName = self::$categoryLabels[$request->category_id] ?? 'kategori';
+
+    $pdf = PDF::loadView('exports.filtered_pdf', [
+        'data' => $data,
+        'categoryName' => $categoryName
+    ]);
+
+    return $pdf->download('data-' . strtolower(str_replace(' ', '-', $categoryName)) . '.pdf');
+}
+
+public function downloadExcel(Request $request)
+{
+    $request->validate([
+        'category_id' => 'required',
+        'desa_id' => 'required',
+        'year' => 'required',
+    ]);
+
+    $categoryName = self::$categoryLabels[$request->category_id] ?? 'kategori';
+
+    return Excel::download(
+        new FilteredExport($request, $categoryName),
+        'data-' . strtolower(str_replace(' ', '-', $categoryName)) . '.xlsx'
+    );
+}
+
+
+// filter download
+public function getFilteredData($request)
+{
+    $category_id = $request->category_id;
+    $desa_id = $request->desa_id;
+    $year = $request->year;
+
+    $mapping = [
+                    1 => [ // ID kategori kelembagaan
+                        'model' => \App\Models\KelembagaanDesa::class,
+                        'columns' => ['jenis_kelembagaan', 'nama_kelembagaan'],
+                        'groupBy' => ['jenis_kelembagaan', 'nama_kelembagaan'],
+                        'filter_kategori' => true,
+                    ],
+                    3 => [ // ID kategori kerawanan sosial
+                        'model' => \App\Models\KerawananSosialDesa::class,
+                        'columns' => ['jenis_kerawanan'],
+                        'groupBy' => ['jenis_kerawanan'],
+                        'filter_kategori' => true,
+                    ],
+                    4 => [ 
+                        'model' => \App\Models\SaranaLainyaDesa::class,
+                        'columns' => ['jenis_sarana_lainnya','nama_sarana_lainnya'],
+                        'groupBy' => ['jenis_sarana_lainnya','nama_sarana_lainnya'],
+                        'filter_kategori' => true,
+                    ],
+                    5 => [
+                        'model' => \App\Models\TempatTinggalDesa::class,
+                        'columns' => ['jenis_tempat_tinggal'],
+                        'groupBy' => ['jenis_tempat_tinggal'],
+                        'filter_kategori' => true,
+                    ],
+                    6 => [
+                        'model' => \App\Models\SumberDayaAlamDesa::class,
+                        'columns' => ['jenis_sumber_daya_alam'],
+                        'groupBy' => ['jenis_sumber_daya_alam'],
+                        'filter_kategori' => true,
+                    ],
+                    7 => [
+                        'model' => \App\Models\EnergiDesa::class,
+                        'columns' => ['jenis_energi'],
+                        'groupBy' => ['jenis_energi'],
+                        'filter_kategori' => true,
+                    ],
+                    8 => [
+                        'model' => \App\Models\OlahragaDesa::class,
+                        'columns' => ['jenis_olahraga','nama_kelompok_olahraga'],
+                        'groupBy' => ['jenis_olahraga','nama_kelompok_olahraga'],
+                        'filter_kategori' => true,
+                    ],
+                    9 => [
+                        'model' => \App\Models\Ekonomi::class,
+                        'columns' => ['jenis','nama','pemilik'],
+                        'groupBy' => ['jenis','nama','pemilik'],
+                        'filter_kategori' => true,
+                    ],
+                    10 => [
+                        'model' => \App\Models\SaranaPendukungKesehatanDesa::class,
+                        'columns' => ['jenis_sarana'],
+                        'groupBy' => ['jenis_sarana'],
+                        'filter_kategori' => true,
+                    ],
+                    11 => [
+                        'model' => \App\Models\SaranaKesehatanDesa::class,
+                        'columns' => ['jenis_sarana'],
+                        'groupBy' => ['jenis_sarana'],
+                        'filter_kategori' => true,
+                    ],
+                    12 => [
+                        'model' => \App\Models\Transportasi::class,
+                        'columns' => ['jenis_transportasi'],
+                        'groupBy' => ['jenis_transportasi'],
+                        'filter_kategori' => true,
+                    ],
+                    13 => [
+                        'model' => \App\Models\UsahaEkonomi::class,
+                        'columns' => ['nama_usaha','luas'],
+                        'groupBy' => ['nama_usaha','luas'],
+                        'filter_kategori' => true,
+                    ],
+                    14 => [
+                        'model' => \App\Models\ProdukUnggulan::class,
+                        'columns' => ['jenis_produk','nama_produk'],
+                        'groupBy' => ['jenis_produk','nama_produk'],
+                        'filter_kategori' => true,
+                    ],
+                    15 => [
+                        'model' => \App\Models\Kebudayaan::class,
+                        'columns' => ['jenis_kebudayaan','nama_kebudayaan'],
+                        'groupBy' => ['jenis_kebudayaan','nama_kebudayaan'],
+                        'filter_kategori' => true,
+                    ],
+                    16 => [
+                        'model' => \App\Models\IndustriPenghasilLimbahDesa::class,
+                        'columns' => ['jenis_industri'],
+                        'groupBy' => ['jenis_industri'],
+                        'filter_kategori' => true,
+                    ],
+                    17 => [
+                        'model' => \App\Models\KondisiLingkunganKeluargaDesa::class,
+                        'columns' => ['jenis_kondisi'],
+                        'groupBy' => ['jenis_kondisi'],
+                        'filter_kategori' => true,
+                    ],
+    ];
+
+    if (!isset($mapping[$category_id])) {
+        abort(404, 'Kategori tidak ditemukan');
+    }
+
+    $config = $mapping[$category_id];
+    $model = $config['model'];
+    $groupingKey = $config['columns'][0];
+    $table = (new $model)->getTable();
+
+    $query = $model::select(
+        "$table.tahun",
+        'kecamatans.nama_kecamatan',
+        'desas.nama_desa',
+        'rt_rw_desas.rt',
+        'rt_rw_desas.rw',
+        "$table.$groupingKey as jenis",
+        ...array_slice($config['columns'], 1)
+    )
+    ->join('desas', 'desas.id', '=', "$table.desa_id")
+    ->join('kecamatans', 'kecamatans.id', '=', 'desas.kecamatan_id')
+    ->join('rt_rw_desas', 'rt_rw_desas.id', '=', "$table.rt_rw_desa_id")
+    ->where("$table.desa_id", $desa_id)
+    ->where("$table.tahun", $year);
+
+    if ($config['filter_kategori'] && Schema::hasColumn($table, 'id_kategori')) {
+        $query->where('id_kategori', $category_id);
+    }
+
+    return $query->get();
+}
+
+//label kategori
+protected static $categoryLabels = [
+    1 => 'Kelembagaan Desa',
+    3 => 'Kerawanan Sosial Desa',
+    4 => 'Sarana Lainnya Desa',
+    5 => 'Tempat Tinggal Desa',
+    6 => 'Sumber Daya Alam Desa',
+    7 => 'Energi Desa',
+    8 => 'Olahraga Desa',
+    9 => 'Ekonomi Desa',
+    10 => 'Sarana Pendukung Kesehatan Desa',
+    11 => 'Sarana Kesehatan Desa',
+    12 => 'Transportasi Desa',
+    13 => 'Usaha Ekonomi Desa',
+    14 => 'Produk Unggulan Desa',
+    15 => 'Kebudayaan Desa',
+    16 => 'Industri Limbah Desa',
+    17 => 'Kondisi Lingkungan Keluarga Desa',
+];
+
 }

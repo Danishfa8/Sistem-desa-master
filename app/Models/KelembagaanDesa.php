@@ -50,7 +50,7 @@ class KelembagaanDesa extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['id_kategori','id_kategori', 'desa_id', 'rt_rw_desa_id', 'tahun', 'jenis_kelembagaan', 'nama_kelembagaan', 'created_by', 'updated_by', 'status', 'reject_reason', 'approved_by', 'approved_at'];
+    protected $fillable = ['id_kategori', 'desa_id', 'rt_rw_desa_id', 'tahun', 'jenis_kelembagaan', 'nama_kelembagaan', 'created_by', 'updated_by', 'status', 'reject_reason', 'approved_by', 'approved_at'];
 
 
     /**

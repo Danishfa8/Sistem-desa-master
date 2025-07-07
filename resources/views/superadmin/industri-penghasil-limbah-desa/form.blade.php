@@ -1,15 +1,29 @@
 <div class="row padding-1 p-1">
     <div class="col-md-12">
 
+        <div class="form-group mb-2">
+            <label for="id_kategori" class="form-label">{{ __('Kategori') }}</label>
+            <select name="id_kategori" id="id_kategori" class="form-control select2 @error('id_kategori') is-invalid @enderror">
+                <option value="">-- Pilih Kategori --</option>
+                @foreach ($kategoris as $kategori)
+                <option value="{{ $kategori->id }}"
+                    {{ old('id_kategori', $industriPenghasilLimbahDesa?->id_kategori) == $kategori->id ? 'selected' : '' }}>
+                    {{ $kategori->nama }}
+                </option>
+                @endforeach
+            </select>
+            {!! $errors->first('id_kategori', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
+        </div>
+        
         <div class="form-group mb-2 mb20">
             <label for="desa_id" class="form-label">{{ __('Desa') }}</label>
             <select name="desa_id" id="desa_id" class="form-control select2 @error('desa_id') is-invalid @enderror">
                 <option value="">-- Pilih Desa --</option>
                 @foreach ($desas as $item)
-                    <option value="{{ $item->id }}"
-                        {{ old('desa_id', $industriPenghasilLimbahDesa?->desa_id) == $item->id ? 'selected' : '' }}>
-                        {{ $item->nama_desa }}
-                    </option>
+                <option value="{{ $item->id }}"
+                    {{ old('desa_id', $industriPenghasilLimbahDesa?->desa_id) == $item->id ? 'selected' : '' }}>
+                    {{ $item->nama_desa }}
+                </option>
                 @endforeach
             </select>
             {!! $errors->first('desa_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
@@ -23,7 +37,7 @@
         <div class="form-group mb-2 mb20">
             <label for="tahun" class="form-label">{{ __('Tahun') }}</label>
             <input type="number" name="tahun" class="form-control @error('tahun') is-invalid @enderror"
-                value="{{ old('tahun', $industriPenghasilLimbahDesa?->tahun) }}" id="tahun" placeholder="Tahun">
+                value="{{ old('tahun', $industriPenghasilLimbahDesa?->tahun) }}" id="tahun" placeholder="Contoh: 2025" min="1900" max="{{ date('Y') + 5 }}">
             {!! $errors->first('tahun', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
         <div class="form-group mb-2 mb20">
@@ -42,8 +56,8 @@
 
             </select>
             {!! $errors->first(
-                'jenis_industri',
-                '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>',
+            'jenis_industri',
+            '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>',
             ) !!}
         </div>
         <input type="hidden" name="created_by" value="{{ Auth::user()->name }}">

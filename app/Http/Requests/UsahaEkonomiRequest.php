@@ -22,8 +22,10 @@ class UsahaEkonomiRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'id_kategori' => 'required',
+            'rt_rw_desa_id' => 'required',
 			'desa_id' => 'required',
-			'tahun' => 'required',
+			'tahun' => 'required|digits:4|integer|min:1900|max:' . (date('Y') + 5),
 			'nama_usaha' => 'required|string',
 			'luas' => 'required|string',
 			'created_by' => 'required|string',

@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\IndustriPenghasilLimbahDesaRequest;
 use App\Models\Desa;
+use App\Models\Kategori;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
@@ -29,10 +30,11 @@ class IndustriPenghasilLimbahDesaController extends Controller
      */
     public function create(): View
     {
+        $kategoris = Kategori::all();
         $industriPenghasilLimbahDesa = new IndustriPenghasilLimbahDesa();
         $desas = Desa::all();
 
-        return view('superadmin.industri-penghasil-limbah-desa.create', compact('industriPenghasilLimbahDesa', 'desas'));
+        return view('superadmin.industri-penghasil-limbah-desa.create', compact('kategoris','industriPenghasilLimbahDesa', 'desas'));
     }
 
     /**
@@ -61,10 +63,11 @@ class IndustriPenghasilLimbahDesaController extends Controller
      */
     public function edit($id): View
     {
+        $kategoris = Kategori::all();
         $industriPenghasilLimbahDesa = IndustriPenghasilLimbahDesa::find($id);
         $desas = Desa::all();
 
-        return view('superadmin.industri-penghasil-limbah-desa.edit', compact('industriPenghasilLimbahDesa', 'desas'));
+        return view('superadmin.industri-penghasil-limbah-desa.edit', compact('kategoris','industriPenghasilLimbahDesa', 'desas'));
     }
 
     /**

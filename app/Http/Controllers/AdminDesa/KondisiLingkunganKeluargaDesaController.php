@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\KondisiLingkunganKeluargaDesaRequest;
 use App\Models\Desa;
+use App\Models\Kategori;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
@@ -29,10 +30,11 @@ class KondisiLingkunganKeluargaDesaController extends Controller
      */
     public function create(): View
     {
+        $kategoris = Kategori::all();
         $kondisiLingkunganKeluargaDesa = new KondisiLingkunganKeluargaDesa();
         $desas = Desa::all();
 
-        return view('admin_desa.kondisi-lingkungan-keluarga-desa.create', compact('kondisiLingkunganKeluargaDesa', 'desas'));
+        return view('admin_desa.kondisi-lingkungan-keluarga-desa.create', compact('kategoris','kondisiLingkunganKeluargaDesa', 'desas'));
     }
 
     /**
@@ -61,10 +63,11 @@ class KondisiLingkunganKeluargaDesaController extends Controller
      */
     public function edit($id): View
     {
+        $kategoris = Kategori::all();
         $kondisiLingkunganKeluargaDesa = KondisiLingkunganKeluargaDesa::find($id);
         $desas = Desa::all();
 
-        return view('admin_desa.kondisi-lingkungan-keluarga-desa.edit', compact('kondisiLingkunganKeluargaDesa', 'desas'));
+        return view('admin_desa.kondisi-lingkungan-keluarga-desa.edit', compact('kategoris','kondisiLingkunganKeluargaDesa', 'desas'));
     }
 
     /**
