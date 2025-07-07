@@ -7,6 +7,7 @@
     'ajukanRoute' => false,
     'statusField' => 'status',
 ])
+
 <td>
     {{-- Button Show --}}
     @if ($showRoute)
@@ -16,23 +17,23 @@
         </button>
     @endif
 
-    {{-- Button Edit (hilang jika Pending/Approved) --}}
-    @if ($editRoute && !in_array($item->{$statusField}, ['Pending', 'Approved']))
+    {{-- Button Edit: hanya untuk status Arsip & Rejected --}}
+    @if ($editRoute && in_array($item->{$statusField}, ['Arsip', 'Rejected']))
         <a class="btn btn-sm btn-success" href="{{ route($routePrefix . '.edit', $item->id) }}">
             <i class="las la-edit"></i> {{ __('Edit') }}
         </a>
     @endif
 
-    {{-- Button Delete (hilang jika Pending/Approved) --}}
-    @if ($deleteRoute && !in_array($item->{$statusField}, ['Pending', 'Approved']))
+    {{-- Button Delete: hanya untuk status Arsip & Rejected --}}
+    @if ($deleteRoute && in_array($item->{$statusField}, ['Arsip', 'Rejected']))
         <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
             data-bs-target="#deleteModal{{ $item->id }}">
             <i class="las la-trash"></i> {{ __('Delete') }}
         </button>
     @endif
 
-    {{-- Button Ajukan --}}
-    @if ($ajukanRoute && $item->{$statusField} === 'Arsip')
+    {{-- Button Ajukan: hanya untuk status Arsip & Rejected --}}
+    @if ($ajukanRoute && in_array($item->{$statusField}, ['Arsip', 'Rejected']))
         <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal"
             data-bs-target="#ajukanModal{{ $item->id }}">
             <i class="las la-paper-plane"></i> {{ __('Ajukan') }}
@@ -41,7 +42,7 @@
 </td>
 
 {{-- Modal Delete --}}
-@if ($deleteRoute && !in_array($item->{$statusField}, ['Pending', 'Approved']))
+@if ($deleteRoute && in_array($item->{$statusField}, ['Arsip', 'Rejected']))
     <div class="modal flip" id="deleteModal{{ $item->id }}" data-bs-backdrop="static" data-bs-keyboard="false"
         tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel{{ $item->id }}" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -76,12 +77,11 @@
     </div>
 @endif
 
-{{-- Modal Konfirmasi Pengajuan --}}
-@if ($ajukanRoute && $item->{$statusField} === 'Arsip')
+{{-- Modal Ajukan --}}
+@if ($ajukanRoute && in_array($item->{$statusField}, ['Arsip', 'Rejected']))
     @php
         $resource = str_replace(['admin_desa.', 'admin.'], '', $routePrefix);
     @endphp
-    <!-- Modal Ajukan -->
     <div class="modal flip" id="ajukanModal{{ $item->id }}" data-bs-backdrop="static" data-bs-keyboard="false"
         tabindex="-1" role="dialog" aria-labelledby="ajukanModalLabel{{ $item->id }}" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -118,21 +118,17 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Handle delete form submission with loading state
         document.querySelectorAll('.delete-form').forEach(function(form) {
-            form.addEventListener('submit', function(e) {
+            form.addEventListener('submit', function() {
                 const button = this.querySelector('.btn-delete');
-                // Disable button to prevent double submit
                 button.disabled = true;
                 button.innerHTML = '<i class="las la-spinner la-spin me-1"></i> Processing...';
             });
         });
 
-        // Handle ajukan form submission with loading state
         document.querySelectorAll('.ajukan-form').forEach(function(form) {
-            form.addEventListener('submit', function(e) {
+            form.addEventListener('submit', function() {
                 const button = this.querySelector('.btn-ajukan');
-                // Disable button to prevent double submit
                 button.disabled = true;
                 button.innerHTML = '<i class="las la-spinner la-spin me-1"></i> Processing...';
             });

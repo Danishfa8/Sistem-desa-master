@@ -39,8 +39,9 @@
                                         <th>Nama Sarana Ibadah</th>
                                         <th>Foto</th>
                                         <th>Created By</th>
+                                        <th>Status</th>
 
-                                        <th></th>
+                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -58,25 +59,22 @@
                                                     alt="Ibadah desa"
                                                     style="width: 100px; height: 100px; object-fit: cover;"></td>
                                             <td>{{ $saranaIbadahDesa->created_by }}</td>
+                                            <td>
+                                                <span class="badge
+                                                    @if ($saranaIbadahDesa->status === 'Approved') bg-success
+                                                    @elseif ($saranaIbadahDesa->status === 'Pending') bg-warning text-dark
+                                                    @elseif ($saranaIbadahDesa->status === 'Arsip') bg-secondary
+                                                    @elseif ($saranaIbadahDesa->status === 'Rejected') bg-danger
+                                                    @else bg-light text-dark @endif">
+                                                    {{ $saranaIbadahDesa->status }}
+                                                </span>
+                                            </td>
 
                                             <td>
-                                                <form
-                                                    action="{{ route('superadmin.sarana-ibadah-desa.destroy', $saranaIbadahDesa->id) }}"
-                                                    method="POST">
-                                                    <button type="button" class="btn btn-sm btn-primary"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#showModal{{ $saranaIbadahDesa->id }}">
-                                                        <i class="las la-eye"></i> {{ __('Show') }}
-                                                    </button>
-                                                    <a class="btn btn-sm btn-success"
-                                                        href="{{ route('superadmin.sarana-ibadah-desa.edit', $saranaIbadahDesa->id) }}"><i
-                                                            class="las la-edit"></i> {{ __('Edit') }}</a>
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm"
-                                                        onclick="event.preventDefault(); confirm('Are you sure to delete?') ? this.closest('form').submit() : false;"><i
-                                                            class="las la-trash"></i> {{ __('Delete') }}</button>
-                                                </form>
+                                            <x-action-buttons-superadmin 
+                                                    :item="$saranaIbadahDesa" 
+                                                    routePrefix="superadmin.sarana-ibadah-desa"
+                                                    :deleteRoute="true" />
                                             </td>
                                         </tr>
                                         @include('layouts.partials.modal.modal_sarana_ibadah')

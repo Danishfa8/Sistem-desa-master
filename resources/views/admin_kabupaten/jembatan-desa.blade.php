@@ -36,6 +36,8 @@
                                         <th>Lokasi</th>
                                         <th>Foto</th>
                                         <th>Created By</th>
+                                        <th>Status</th>
+                                        <th>Aksi</th>
 
                                         <th></th>
                                     </tr>
@@ -73,9 +75,26 @@
     @endif
 </td>
                                             <td>{{ $jembatanDesa->created_by }}</td>
-                                            <x-action-buttons :item="$jembatanDesa" route-prefix="admin_desa.jembatan-desa"
-                                                :ajukan-route="true" status-field="status" />
+                                            <td>
+                                            <span class="badge
+                                                @if ($jembatanDesa->status === 'Approved') bg-success
+                                                @elseif ($jembatanDesa->status === 'Pending') bg-warning text-dark
+                                                @elseif ($jembatanDesa->status === 'Arsip') bg-secondary
+                                                @elseif ($jembatanDesa->status === 'Rejected') bg-danger
+                                                @else bg-light text-dark @endif">
+                                                {{ $jembatanDesa->status }}
+                                            </span>
+                                        </td>
+                                            <td>
+    <x-action-buttons-kabupaten 
+        :item="$jembatanDesa" 
+        route-prefix="admin_kabupaten.jembatan-desa" 
+        table-name="jembatan_desas"
+    />
+</td>
+
                                         </tr>
+                                        @include('layouts.partials.modal.modal_jembatan')
                                     @endforeach
                                 </tbody>
                             </table>

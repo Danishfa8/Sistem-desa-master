@@ -59,7 +59,12 @@
                         <strong>Foto</strong>
                     </div>
                     <div class="col-sm-8">
-                        {{ $saranaIbadahDesa->foto }}
+                        @if ($saranaIbadahDesa->foto)
+                        <img src="{{ asset('storage/' . $saranaIbadahDesa->foto) }}" alt="Foto Sarana Ibadah"
+                class="img-fluid rounded shadow-sm" style="max-height: 250px;">
+        @else
+            <span class="text-muted">Tidak ada foto</span>
+        @endif
                     </div>
                 </div>
 
@@ -146,15 +151,15 @@
                     <div class="card-body">
                         {{-- PERBAIKAN ROUTE: tukar posisi table dan id --}}
                         <form
-                            action="{{ route('approval', ['table' => 'sarana_ibadah_desas', 'id' => $saranaIbadah->id]) }}"
-                            method="POST" id="approvalForm{{ $saranaIbadah->id }}">
+                            action="{{ route('approval', ['table' => 'sarana_ibadah_desas', 'id' => $saranaIbadahDesa->id]) }}"
+                            method="POST" id="approvalForm{{ $saranaIbadahDesa->id }}">
                             @csrf
                             @method('PUT')
                             <div class="mb-3">
-                                <label for="approval_status{{ $saranaIbadah->id }}" class="form-label">
+                                <label for="approval_status{{ $saranaIbadahDesa->id }}" class="form-label">
                                     <strong>Status Approval <span class="text-danger">*</span></strong>
                                 </label>
-                                <select class="form-select" id="approval_status{{ $saranaIbadah->id }}" name="status"
+                                <select class="form-select" id="approval_status{{ $saranaIbadahDesa->id }}" name="status"
                                     required>
                                     <option value="">-- Pilih Status --</option>
                                     <option value="Approved">Approve</option>
@@ -162,18 +167,18 @@
                                 </select>
                             </div>
 
-                            <div class="mb-3" id="reject_reason_container{{ $saranaIbadah->id }}"
+                            <div class="mb-3" id="reject_reason_container{{ $saranaIbadahDesa->id }}"
                                 style="display: none;">
-                                <label for="reject_reason{{ $saranaIbadah->id }}" class="form-label">
+                                <label for="reject_reason{{ $saranaIbadahDesa->id }}" class="form-label">
                                     <strong>Alasan Penolakan <span class="text-danger">*</span></strong>
                                 </label>
-                                <textarea class="form-control" id="reject_reason{{ $saranaIbadah->id }}" name="reject_reason" rows="3"
+                                <textarea class="form-control" id="reject_reason{{ $saranaIbadahDesa->id }}" name="reject_reason" rows="3"
                                     placeholder="Masukkan alasan penolakan..."></textarea>
                             </div>
 
                             <div class="d-grid gap-2">
                                 <button type="submit" class="btn btn-success"
-                                    onclick="return confirmApproval{{ $saranaIbadah->id }}()">
+                                    onclick="return confirmApproval{{ $saranaIbadahDesa->id }}()">
                                     <i class="fa fa-save"></i> Proses Approval
                                 </button>
                             </div>
@@ -182,9 +187,9 @@
 
 
                     <script>
-                        document.getElementById('approval_status{{ $saranaIbadah->id }}').addEventListener('change', function() {
-                            const rejectContainer = document.getElementById('reject_reason_container{{ $saranaIbadah->id }}');
-                            const rejectTextarea = document.getElementById('reject_reason{{ $saranaIbadah->id }}');
+                        document.getElementById('approval_status{{ $saranaIbadahDesa->id }}').addEventListener('change', function() {
+                            const rejectContainer = document.getElementById('reject_reason_container{{ $saranaIbadahDesa->id }}');
+                            const rejectTextarea = document.getElementById('reject_reason{{ $saranaIbadahDesa->id }}');
 
                             if (this.value === 'Rejected') {
                                 rejectContainer.style.display = 'block';
@@ -196,8 +201,8 @@
                             }
                         });
 
-                        function confirmApproval{{ $saranaIbadah->id }}() {
-                            const status = document.getElementById('approval_status{{ $saranaIbadah->id }}').value;
+                        function confirmApproval{{ $saranaIbadahDesa->id }}() {
+                            const status = document.getElementById('approval_status{{ $saranaIbadahDesa->id }}').value;
                             const message = status === 'Approved' ?
                                 'Apakah Anda yakin ingin menyetujui data ini?' :
                                 'Apakah Anda yakin ingin menolak data ini?';

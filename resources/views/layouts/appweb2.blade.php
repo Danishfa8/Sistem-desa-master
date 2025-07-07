@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="h-full">
 
 <head>
     <meta charset="UTF-8">
@@ -36,15 +36,31 @@
             color: #1d4ed8;
             border-bottom-color: #f97316;
         }
+
+              /* Loading Bar Styles */
+      #loading-bar {
+         position: fixed;
+         top: 0;
+         left: 0;
+         height: 3px;
+         background: linear-gradient(to right, #4f46e5, #60a5fa);
+         z-index: 9999;
+         width: 0%;
+         transition: width 0.3s ease-out;
+         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
     </style>
 </head>
 
-<body class="bg-gray-100">
+<body class="flex flex-col min-h-screen bg-gray-100">
+
+<!-- Loading Bar -->
+<div id="loading-bar"></div>
     <!-- Sticky White Navbar with Scroll Blur Effect -->
     <header id="navbar" class="bg-white transition-all duration-300 sticky top-0 z-50 border-b border-gray-300">
         <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between backdrop-blur-sm">
             <!-- Logo -->
-            <a href="#" class="flex items-center gap-3 hover:opacity-90 transition-opacity">
+            <a href="{{ url('/') }}" class="flex items-center gap-3 hover:opacity-90 transition-opacity">
                 <img src="{{ asset('assets/images/Logo-brebes.png') }}" alt="Logo Kabupaten Brebes"
                     class="w-12 h-12 object-contain" width="48" height="48">
                 <span class="text-gray-300 h-8 border-r border-gray-300 mx-1"></span>
@@ -68,37 +84,31 @@
             <!-- Desktop Nav -->
             <nav id="nav-menu" class="hidden md:flex items-center justify-end flex-1 gap-2">
                 <a href="{{ route('profile.desa') }}"
-                    class="flex flex-col items-center justify-center transition border {{ request()->routeIs('profil.desa') ? 'border-blue-500' : 'border-gray-300' }} rounded-lg p-2 hover:border-blue-500 min-w-[80px] {{ request()->routeIs('profile.desa') ? 'text-blue-600 font-semibold' : 'text-gray-700 hover:text-blue-600' }}">
-                    <img src="{{ asset('assets/icons/ppdesa.png') }}" alt="Profil Icon" class="w-6 h-6 mb-1">
+                    class="flex flex-col items-center justify-center transition border border-gray-300 rounded-lg p-2 hover:border-blue-500 min-w-[80px] {{ request()->routeIs('profile.desa') ? 'text-blue-600 font-semibold border-blue-500' : 'text-gray-700 hover:text-blue-600' }}">
+                    <img src="{{ asset('assets/icons/ppdesa.png') }}" alt="Profil Icon" class="w-7 h-7 mb-1">
                     Profil Desa
                 </a>
                 <a href="{{ route('data.index') }}"
-                    class="flex flex-col items-center justify-center transition border {{ request()->routeIs('data.index') ? 'border-blue-500' : 'border-gray-300' }} rounded-lg p-2 hover:border-blue-500 min-w-[80px] {{ request()->routeIs('data.index') ? 'text-blue-600 font-semibold' : 'text-gray-700 hover:text-blue-600' }}">
+                    class="flex flex-col items-center justify-center transition border border-gray-300 rounded-lg p-2 hover:border-blue-500 min-w-[80px] {{ request()->routeIs('data.index') ? 'text-blue-600 font-semibold border-blue-500' : 'text-gray-700 hover:text-blue-600' }}">
                     <img src="{{ asset('assets/icons/angka.png') }}" alt="Angka Icon" class="w-6 h-6 mb-1">
                     Desa Dalam Angka
                 </a>
                 <a href="{{ route('peta.dinamik') }}"
-                    class="flex flex-col items-center justify-center transition border {{ request()->routeIs('peta.dinamik') ? 'border-blue-500' : 'border-gray-300' }} rounded-lg p-2 hover:border-blue-500 min-w-[80px] {{ request()->routeIs('peta.dinamik') ? 'text-blue-600 font-semibold' : 'text-gray-700 hover:text-blue-600' }}">
+                    class="flex flex-col items-center justify-center transition border border-gray-300 rounded-lg p-2 hover:border-blue-500 min-w-[80px] {{ request()->routeIs('peta.dinamik') ? 'text-blue-600 font-semibold border-blue-500' : 'text-gray-700 hover:text-blue-600' }}">
                     <img src="{{ asset('assets/icons/peta.png') }}" alt="Peta Icon" class="w-6 h-6 mb-1">
                     Desa Dalam Peta
                 </a>
-                <a href="#"
-                    class="flex flex-col items-center justify-center transition border border-gray-300 rounded-lg p-2 hover:border-blue-500 min-w-[80px] text-gray-700 hover:text-blue-600">
-                    <img src="https://cdn-icons-png.flaticon.com/512/2991/2991108.png" alt="Buku Icon"
+                <a href="{{ route('desa-dalam-buku') }}"
+                    class="flex flex-col items-center justify-center transition border border-gray-300 rounded-lg p-2 hover:border-blue-500 min-w-[80px] {{ request()->routeIs('desa-dalam-buku') ? 'text-blue-600 font-semibold border-blue-500' : 'text-gray-700 hover:text-blue-600' }}">
+                    <img src="{{ asset('assets/icons/buku.png') }}" alt="Buku Icon"
                         class="w-6 h-6 mb-1">
                     Buku Monografi
                 </a>
-                <a href="#"
-                    class="flex flex-col items-center justify-center transition border border-gray-300 rounded-lg p-2 hover:border-blue-500 min-w-[80px] text-gray-700 hover:text-blue-600">
-                    <img src="https://cdn-icons-png.flaticon.com/512/833/833539.png" alt="Metadata Icon"
+                <a href="{{ route('data.informasi') }}"
+                    class="flex flex-col items-center justify-center transition border border-gray-300 rounded-lg p-2 hover:border-blue-500 min-w-[80px] {{ request()->routeIs('data.informasi') ? 'text-blue-600 font-semibold border-blue-500' : 'text-gray-700 hover:text-blue-600' }}">
+                    <img src="{{ asset('assets/icons/infodata.png') }}" alt="Metadata Icon"
                         class="w-6 h-6 mb-1">
-                    Metadata
-                </a>
-                <a href="#"
-                    class="flex flex-col items-center justify-center transition border border-gray-300 rounded-lg p-2 hover:border-blue-500 min-w-[80px] text-gray-700 hover:text-blue-600">
-                    <img src="https://cdn-icons-png.flaticon.com/512/911/911406.png" alt="Instrumen Icon"
-                        class="w-6 h-6 mb-1">
-                    Instrumen
+                    Informasi Data
                 </a>
             </nav>
         </div>
@@ -107,54 +117,46 @@
         <div id="mobile-menu" class="md:hidden hidden px-6 pb-4 z-[9999]">
             <div class="grid grid-cols-2 gap-4 text-sm font-medium">
                 <a href="{{ route('profile.desa') }}"
-                    class="flex flex-col items-center justify-center transition border border-blue-500 rounded-lg p-3 text-blue-600 font-semibold">
-                    <img src="https://cdn-icons-png.flaticon.com/512/1949/1949389.png" alt="Profil Icon"
+                    class="flex flex-col items-center justify-center transition border border-gray-300 rounded-lg p-3 hover:border-blue-500 {{ request()->routeIs('profile.desa') ? 'text-blue-600 font-semibold border-blue-500' : 'text-gray-700 hover:text-blue-600' }}">
+                    <img src="{{ asset('assets/icons/ppdesa.png') }}" alt="Profil Icon"
                         class="w-6 h-6 mb-1">
                     Profil Desa
                 </a>
-                <a href="#"
-                    class="flex flex-col items-center justify-center transition border border-gray-300 rounded-lg p-3 hover:border-blue-500 text-gray-700 hover:text-blue-600">
-                    <img src="https://cdn-icons-png.flaticon.com/512/1313/1313246.png" alt="Angka Icon"
+                <a href="{{ route('data.index') }}"
+                    class="flex flex-col items-center justify-center transition border border-gray-300 rounded-lg p-3 hover:border-blue-500 {{ request()->routeIs('data.index') ? 'text-blue-600 font-semibold border-blue-500' : 'text-gray-700 hover:text-blue-600' }}">
+                    <img src="{{ asset('assets/icons/angka.png') }}" alt="Angka Icon"
                         class="w-6 h-6 mb-1">
                     Desa Dalam Angka
                 </a>
                 <a href="{{ route('peta.dinamik') }}"
-                    class="flex flex-col items-center justify-center transition border border-gray-300 rounded-lg p-3 hover:border-blue-500 text-gray-700 hover:text-blue-600">
-                    <img src="https://cdn-icons-png.flaticon.com/512/535/535137.png" alt="Peta Icon"
+                    class="flex flex-col items-center justify-center transition border border-gray-300 rounded-lg p-3 hover:border-blue-500 {{ request()->routeIs('peta.dinamik') ? 'text-blue-600 font-semibold border-blue-500' : 'text-gray-700 hover:text-blue-600' }}">
+                    <img src="{{ asset('assets/icons/peta.png') }}" alt="Peta Icon"
                         class="w-6 h-6 mb-1">
                     Desa Dalam Peta
                 </a>
-                <a href="#"
-                    class="flex flex-col items-center justify-center transition border border-gray-300 rounded-lg p-3 hover:border-blue-500 text-gray-700 hover:text-blue-600">
-                    <img src="https://cdn-icons-png.flaticon.com/512/1828/1828919.png" alt="Grafik Icon"
-                        class="w-6 h-6 mb-1">
-                    Desa Dalam Grafik
-                </a>
-                <a href="#"
-                    class="flex flex-col items-center justify-center transition border border-gray-300 rounded-lg p-3 hover:border-blue-500 text-gray-700 hover:text-blue-600">
-                    <img src="https://cdn-icons-png.flaticon.com/512/2991/2991108.png" alt="Buku Icon"
+                <a href="{{ route('desa-dalam-buku') }}"
+                    class="flex flex-col items-center justify-center transition border border-gray-300 rounded-lg p-3 hover:border-blue-500 {{ request()->routeIs('desa-dalam-buku') ? 'text-blue-600 font-semibold border-blue-500' : 'text-gray-700 hover:text-blue-600' }}">
+                    <img src="{{ asset('assets/icons/buku.png') }}" alt="Buku Icon"
                         class="w-6 h-6 mb-1">
                     Buku Monografi
                 </a>
-                <a href="#"
-                    class="flex flex-col items-center justify-center transition border border-gray-300 rounded-lg p-3 hover:border-blue-500 text-gray-700 hover:text-blue-600">
-                    <img src="https://cdn-icons-png.flaticon.com/512/833/833539.png" alt="Metadata Icon"
+                <a href="{{ route('data.informasi') }}"
+                    class="flex flex-col items-center justify-center transition border border-gray-300 rounded-lg p-3 hover:border-blue-500 {{ request()->routeIs('data.informasi') ? 'text-blue-600 font-semibold border-blue-500' : 'text-gray-700 hover:text-blue-600' }}">
+                    <img src="{{ asset('assets/icons/infodata.png') }}" alt="Metadata Icon"
                         class="w-6 h-6 mb-1">
-                    Metadata
-                </a>
-                <a href="#"
-                    class="flex flex-col items-center justify-center transition border border-gray-300 rounded-lg p-3 hover:border-blue-500 text-gray-700 hover:text-blue-600">
-                    <img src="https://cdn-icons-png.flaticon.com/512/911/911406.png" alt="Instrumen Icon"
-                        class="w-6 h-6 mb-1">
-                    Instrumen
+                    Informasi Data
                 </a>
             </div>
         </div>
     </header>
 
     <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 py-6">
-        @yield('content')
+    <main class="flex-grow container mx-auto mt-6 p-4">
+      @yield('content')
+   </main>
+
+           <!-- Footer -->
+    @include('layouts.footer')
 
         <script>
             // Mobile menu toggle
@@ -172,6 +174,12 @@
                 }
             });
         </script>
+        
+        <!-- Loading Bar Script -->
+        @vite('resources/js/loading-app.js')
 </body>
 
 </html>
+
+
+

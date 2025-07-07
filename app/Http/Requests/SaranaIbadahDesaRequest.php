@@ -27,7 +27,7 @@ class SaranaIbadahDesaRequest extends FormRequest
             'tahun' => 'required',
             'jenis_sarana_ibadah' => 'required',
             'nama_sarana_ibadah' => 'required|string',
-            'foto' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'latitude' => 'required|string',
             'longitude' => 'required|string',
             'created_by' => 'required|string',

@@ -15,7 +15,7 @@
                     </div>
                     <div class="card-body bg-white">
                         <form method="POST"
-                            action="{{ route('superadmin.sarana-ibadah-desas.update', $saranaIbadahDesa->id) }}"
+                            action="{{ route('superadmin.sarana-ibadah-desa.update', $saranaIbadahDesa->id) }}"
                             role="form" enctype="multipart/form-data">
                             {{ method_field('PATCH') }}
                             @csrf

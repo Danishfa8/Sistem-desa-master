@@ -80,8 +80,14 @@
         <div class="form-group mb-2 mb20">
             <label for="foto" class="form-label">{{ __('Foto') }}</label>
             <input type="file" name="foto" class="form-control @error('foto') is-invalid @enderror"
-                value="{{ old('foto', $saranaIbadahDesa?->foto) }}" id="foto" placeholder="Foto" required>
+            {{ request()->routeIs('admin_desa.sarana-ibadah-desa.create') ? 'required' : '' }}>
             {!! $errors->first('foto', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
+            @if (!empty($saranaIbadahDesa?->foto))
+        <div class="mb-2">
+            <img src="{{ asset('storage/' . $saranaIbadahDesa->foto) }}" alt="Foto Sarana Ibadah"
+                class="img-thumbnail" style="max-width: 200px;">
+        </div>
+    @endif
         </div>
         <div class="form-group mb-2 mb20">
             <label for="latitude" class="form-label">{{ __('Latitude') }}</label>

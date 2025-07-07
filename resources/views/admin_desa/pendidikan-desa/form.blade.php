@@ -34,6 +34,10 @@
                     {{ old('jenis_pendidikan', $pendidikanDesa?->jenis_pendidikan) == 'Perpustakaan' ? 'selected' : '' }}>
                     Perpustakaan
                 </option>
+                <option value="TK/PAUD"
+                    {{ old('jenis_pendidikan', $pendidikanDesa?->jenis_pendidikan) == 'TK/PAUD' ? 'selected' : '' }}>
+                    TK/PAUD
+                </option>
                 <option value="SD"
                     {{ old('jenis_pendidikan', $pendidikanDesa?->jenis_pendidikan) == 'SD' ? 'selected' : '' }}>
                     SD

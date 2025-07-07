@@ -39,8 +39,8 @@
                                         <th>Nama Sarana Ibadah</th>
                                         <th>Foto</th>
                                         <th>Created By</th>
-
-                                        <th></th>
+                                        <th>Status</th>
+                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -58,6 +58,16 @@
                                                     alt="Ibadah desa"
                                                     style="width: 100px; height: 100px; object-fit: cover;"></td>
                                             <td>{{ $saranaIbadahDesa->created_by }}</td>
+                                            <td>
+                                                <span class="badge
+                                                    @if ($saranaIbadahDesa->status === 'Approved') bg-success
+                                                    @elseif ($saranaIbadahDesa->status === 'Pending') bg-warning text-dark
+                                                    @elseif ($saranaIbadahDesa->status === 'Arsip') bg-secondary
+                                                    @elseif ($saranaIbadahDesa->status === 'Rejected') bg-danger
+                                                    @else bg-light text-dark @endif">
+                                                    {{ $saranaIbadahDesa->status }}
+                                                </span>
+                                            </td>
                                             <x-action-buttons :item="$saranaIbadahDesa" route-prefix="admin_desa.sarana-ibadah-desa"
                                                 :ajukan-route="true" status-field="status" />
 

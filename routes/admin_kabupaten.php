@@ -22,8 +22,9 @@ Route::middleware(['auth', 'role:admin_kabupaten'])->group(function () {
             ->where('type', 'kelembagaan-desa|bumdes|lpmdk|pkk-desa|jembatan-desa|jalan-desa|jalan-kabupaten-desa|kerawanan-sosial-desa|kondisi-lingkungan-keluarga-desa|tempat-tinggal-desa|disabilitas-desa|balita-desa|lansia-desa|pendidikan-desa|olahraga-desa|pelaku-umkm-desa|sarana-kesehatan-desa|sarana-pendukung-kesehatan-desa|sarana-ibadah-desa|sarana-lainya-desa|industri-penghasil-limbah-desa|energi-desa|sumber-daya-alam-desa|pengeluaran|ekonomi|usaha-ekonomi')
             ->name('show');
 
+            
+
         // Approval route
-        // Route::put('/{table}/{id}/approval', [ApprovalController::class, 'approve'])
-        //     ->name('approval');
+       Route::post('/{table}/{id}/approve', [ApprovalController::class, 'approve'])->name('approve');
     });
 });

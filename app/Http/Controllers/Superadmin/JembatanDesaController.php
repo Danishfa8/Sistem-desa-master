@@ -4,29 +4,24 @@ namespace App\Http\Controllers\Superadmin;
 
 use App\Http\Controllers\Controller;
 use App\Models\JembatanDesa;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use App\Http\Requests\JembatanDesaRequest;
 use App\Models\Desa;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use App\Http\Requests\JembatanDesaRequest;
 
 class JembatanDesaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request): View
     {
-        $jembatanDesas = JembatanDesa::with('desa', 'rtRwDesa')->paginate();
+        $jembatanDesas = JembatanDesa::with('desa', 'rtRwDesa')->latest()->paginate(10);
 
         return view('superadmin.jembatan-desa.index', compact('jembatanDesas'))
             ->with('i', ($request->input('page', 1) - 1) * $jembatanDesas->perPage());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create(): View
     {
         $jembatanDesa = new JembatanDesa();
@@ -35,54 +30,85 @@ class JembatanDesaController extends Controller
         return view('superadmin.jembatan-desa.create', compact('jembatanDesa', 'desas'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(JembatanDesaRequest $request): RedirectResponse
+    public function store(JembatanDesaRequest $request)
     {
-        JembatanDesa::create($request->validated());
+        $data = $request->validated();
+
+        // Upload foto jika ada
+        if ($request->hasFile('foto')) {
+            $filename = time() . '_' . uniqid() . '.' . $request->foto->getClientOriginalExtension();
+            Storage::disk('public')->putFileAs('foto_jembatan', $request->file('foto'), $filename);
+            $data['foto'] = $filename; // hanya simpan nama file
+        }
+
+        // Auto-approve dan info pembuat
+        $data['created_by'] = Auth::user()->name;
+        $data['updated_by'] = Auth::user()->name;
+        $data['status'] = 'Approved';
+        $data['approved_by'] = Auth::user()->name;
+        $data['approved_at'] = now();
+
+        JembatanDesa::create($data);
 
         return Redirect::route('superadmin.jembatan-desa.index')
-            ->with('success', 'JembatanDesa created successfully.');
+            ->with('success', 'Data Jembatan Desa berhasil ditambahkan dan disetujui.');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show($id): View
     {
-        $jembatanDesa = JembatanDesa::find($id);
-
+        $jembatanDesa = JembatanDesa::with('desa', 'rtRwDesa')->findOrFail($id);
         return view('superadmin.jembatan-desa.show', compact('jembatanDesa'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit($id): View
     {
-        $jembatanDesa = JembatanDesa::find($id);
+        $jembatanDesa = JembatanDesa::findOrFail($id);
         $desas = Desa::all();
 
         return view('superadmin.jembatan-desa.edit', compact('jembatanDesa', 'desas'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(JembatanDesaRequest $request, JembatanDesa $jembatanDesa): RedirectResponse
+    public function update(JembatanDesaRequest $request, $id)
     {
-        $jembatanDesa->update($request->validated());
+        $jembatanDesa = JembatanDesa::findOrFail($id);
+        $data = $request->validated();
+
+        // Ganti foto jika ada upload baru
+        if ($request->hasFile('foto')) {
+            // Hapus foto lama jika ada
+            if ($jembatanDesa->foto && Storage::disk('public')->exists('foto_jembatan/' . $jembatanDesa->foto)) {
+                Storage::disk('public')->delete('foto_jembatan/' . $jembatanDesa->foto);
+            }
+
+            // Simpan foto baru
+            $filename = time() . '_' . uniqid() . '.' . $request->foto->getClientOriginalExtension();
+            Storage::disk('public')->putFileAs('foto_jembatan', $request->file('foto'), $filename);
+            $data['foto'] = $filename; // hanya simpan nama file
+        }
+
+        $data['updated_by'] = Auth::user()->name;
+        $data['status'] = 'Approved';
+        $data['approved_by'] = Auth::user()->name;
+        $data['approved_at'] = now();
+
+        $jembatanDesa->update($data);
 
         return Redirect::route('superadmin.jembatan-desa.index')
-            ->with('success', 'JembatanDesa updated successfully');
+            ->with('success', 'Data Jembatan Desa berhasil diperbarui dan disetujui.');
     }
 
-    public function destroy($id): RedirectResponse
+    public function destroy($id)
     {
-        JembatanDesa::find($id)->delete();
+        $jembatanDesa = JembatanDesa::findOrFail($id);
+
+
+        if ($jembatanDesa->foto && Storage::exists('public/foto_jembatan/' . $jembatanDesa->foto)) {
+            Storage::delete('public/foto_jembatan/' . $jembatanDesa->foto);
+        }
+
+        $jembatanDesa->delete();
 
         return Redirect::route('superadmin.jembatan-desa.index')
-            ->with('success', 'JembatanDesa deleted successfully');
+            ->with('success', 'Data Jembatan Desa berhasil dihapus.');
     }
 }

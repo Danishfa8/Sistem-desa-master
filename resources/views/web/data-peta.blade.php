@@ -1,93 +1,108 @@
 @extends('layouts.appweb2')
+
 @section('content')
-    <div class="container mx-auto p-4">
-        <!-- Header -->
-        <div class="bg-white rounded-lg shadow-sm p-4 mb-4">
-            <div class="flex items-center gap-2 mb-4">
-                <div class="w-6 h-6 bg-teal-600 rounded flex items-center justify-center">
-                    <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd"
-                            d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
-                            clip-rule="evenodd"></path>
-                    </svg>
-                </div>
-                <h1 class="text-xl font-semibold text-gray-800">Desa Dalam Peta</h1>
-            </div>
-            <!-- Controls -->
-            <div class="flex gap-4 items-center flex-wrap">
-                <select id="kecamatan" class="px-3 py-2 border rounded bg-white text-gray-700 min-w-48">
-                    <option value="">-- Pilih Kecamatan --</option>
-                </select>
-                <select id="desa" class="px-3 py-2 border rounded bg-white text-gray-700 min-w-48" disabled>
-                    <option value="">-- Pilih Desa --</option>
-                </select>
-                <select id="kategori" class="px-3 py-2 border rounded bg-white text-gray-700 min-w-48" disabled>
-                    <option value="">-- Pilih Kategori --</option>
-                </select>
-            </div>
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<!-- MarkerCluster CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<!-- MarkerCluster JS -->
+<script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+
+
+
+<div class="bg-white rounded-2xl shadow-xl p-6 mt-6">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">Desa Dalam Peta</h2>
+
+    <form method="GET" action="{{ route('peta.dinamik') }}" class="flex flex-wrap gap-4 items-end">
+        <!-- KECAMATAN -->
+        <select id="kecamatan" name="kecamatan" class="border rounded px-3 py-2">
+            <option value="">Pilih Kecamatan</option>
+            @foreach ($kecamatans as $kecamatan)
+                <option value="{{ $kecamatan->id }}" {{ $selectedKecamatan == $kecamatan->id ? 'selected' : '' }}>
+                    {{ $kecamatan->nama_kecamatan }}
+                </option>
+            @endforeach
+        </select>
+
+        <!-- DESA -->
+        <select id="desa" name="desa" class="border rounded px-3 py-2">
+            <option value="">Pilih Desa</option>
+            @foreach ($desas as $desa)
+                <option value="{{ $desa->id }}"
+                        data-kecamatan-id="{{ $desa->kecamatan_id }}"
+                        {{ $selectedDesa == $desa->id ? 'selected' : '' }}>
+                    {{ $desa->nama_desa }}
+                </option>
+            @endforeach
+        </select>
+
+        <!-- KATEGORI -->
+        <select id="kategori" name="kategori" class="border rounded px-3 py-2">
+            <option value="" disabled {{ !$selectedKategori ? 'selected' : '' }}>Pilih Kategori</option>
+            @foreach ($kategoriPeta as $kategori)
+                <option value="{{ $kategori->id }}" {{ $selectedKategori == $kategori->id ? 'selected' : '' }}>
+                    {{ $kategori->nama }}
+                </option>
+            @endforeach
+        </select>
+
+        <!-- SUBMIT -->
+        <button type="submit"
+                class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow text-sm">
+            Tampilkan Data
+        </button>
+    </form>
+
+    <!-- Peta -->
+    @if(request('kecamatan') && request('kategori'))
+        <div class="relative w-full h-[600px] rounded-xl overflow-hidden border border-gray-200 shadow-inner mt-5">
+            @if($viewPeta)
+                @include($viewPeta)
+            @endif
         </div>
-
-        <!-- Map Container -->
-        <div class="bg-white rounded-lg shadow-sm overflow-hidden">
-            <div class="relative">
-                <div id="map" class="w-full h-96 bg-blue-100"></div>
-
-                <!-- Info Panel -->
-                <div id="infoPanel"
-                    class="absolute bottom-4 left-4 bg-white rounded-lg shadow-lg p-4 border border-gray-200 max-w-sm hidden z-10">
-                    <div id="infoContent">
-                        <!-- Content will be populated by JavaScript -->
-                    </div>
-                </div>
-
-                <!-- Boundary Controls (ditempatkan via JS jika diperlukan) -->
-            </div>
+    @else
+        <div class="mt-6 text-gray-500 text-sm italic">
+            Silakan pilih Kecamatan, Desa dan Kategori terlebih dahulu untuk menampilkan peta.
         </div>
+    @endif
+</div>
 
-        <!-- Legend -->
-        <div class="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 text-sm">
-            <div class="flex items-center gap-2">
-                <div class="w-4 h-4 bg-red-500 rounded-full flex items-center justify-center text-white text-xs">🏥</div>
-                <span class="text-gray-700">Kesehatan</span>
-            </div>
-            <div class="flex items-center gap-2">
-                <div class="w-4 h-4 bg-red-500 rounded-full flex items-center justify-center text-white text-xs">✈️</div>
-                <span class="text-gray-700">Transportasi</span>
-            </div>
-            <div class="flex items-center gap-2">
-                <div class="w-4 h-4 bg-red-500 rounded-full flex items-center justify-center text-white text-xs">🏛️</div>
-                <span class="text-gray-700">Pemerintahan</span>
-            </div>
-            <div class="flex items-center gap-2">
-                <div class="w-4 h-4 bg-red-500 rounded-full flex items-center justify-center text-white text-xs">🏪</div>
-                <span class="text-gray-700">Perdagangan</span>
-            </div>
-            <div class="flex items-center gap-2">
-                <div class="w-4 h-4 bg-red-500 rounded-full flex items-center justify-center text-white text-xs">🏖️</div>
-                <span class="text-gray-700">Wisata</span>
-            </div>
-            <div class="flex items-center gap-2">
-                <div class="w-4 h-4 bg-red-500 rounded-full flex items-center justify-center text-white text-xs">🏢</div>
-                <span class="text-gray-700">Perkantoran</span>
-            </div>
-            <div class="flex items-center gap-2">
-                <div class="w-4 h-4 bg-red-500 rounded-full flex items-center justify-center text-white text-xs">⚽</div>
-                <span class="text-gray-700">Olahraga</span>
-            </div>
-        </div>
+<!-- Script untuk filter desa berdasarkan kecamatan (tanpa AJAX) -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const kecamatanSelect = document.getElementById('kecamatan');
+        const desaSelect = document.getElementById('desa');
 
-        <!-- Attribution -->
-        <div class="mt-3 pt-2 border-t border-gray-200 text-xs text-gray-500">
-            <a href="https://leafletjs.com" class="text-teal-600 hover:underline">Leaflet</a> ©
-            <a href="https://www.openstreetmap.org/copyright" class="text-teal-600 hover:underline">
-                OpenStreetMap
-            </a> contributors
-        </div>
-    </div>
+        function filterDesa() {
+            const selectedKecamatanId = kecamatanSelect.value;
 
+            // Sembunyikan semua option desa dulu
+            Array.from(desaSelect.options).forEach(option => {
+                const kecamatanId = option.getAttribute('data-kecamatan-id');
+                if (!kecamatanId || kecamatanId === selectedKecamatanId || option.value === '') {
+                    option.hidden = false;
+                } else {
+                    option.hidden = true;
+                }
+            });
 
-    <!-- Scripts -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
-    @vite(['resources/js/app.js'])
+            // Reset pilihan desa jika tidak sesuai kecamatan
+            if (desaSelect.selectedOptions.length > 0) {
+                const selectedDesaOption = desaSelect.selectedOptions[0];
+                if (selectedDesaOption.getAttribute('data-kecamatan-id') !== selectedKecamatanId) {
+                    desaSelect.value = '';
+                }
+            }
+        }
+
+        kecamatanSelect.addEventListener('change', filterDesa);
+
+        // Jalankan filter saat pertama kali load
+        filterDesa();
+    });
+</script>
 @endsection

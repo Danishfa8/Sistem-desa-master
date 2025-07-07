@@ -3,19 +3,18 @@
 namespace App\Http\Controllers\Superadmin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\SaranaIbadahDesaRequest;
+use App\Models\Desa;
 use App\Models\SaranaIbadahDesa;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use App\Http\Requests\SaranaIbadahDesaRequest;
-use App\Models\Desa;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class SaranaIbadahDesaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request): View
     {
         $saranaIbadahDesas = SaranaIbadahDesa::with('desa', 'rtRwDesa')->paginate();
@@ -24,9 +23,6 @@ class SaranaIbadahDesaController extends Controller
             ->with('i', ($request->input('page', 1) - 1) * $saranaIbadahDesas->perPage());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create(): View
     {
         $saranaIbadahDesa = new SaranaIbadahDesa();
@@ -35,64 +31,83 @@ class SaranaIbadahDesaController extends Controller
         return view('superadmin.sarana-ibadah-desa.create', compact('saranaIbadahDesa', 'desas'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(SaranaIbadahDesaRequest $request): RedirectResponse
     {
-        $validatedData = $request->validated();
+        $data = $request->validated();
 
-        if (request()->hasFile('foto')) {
-            $foto = request()->file('foto');
-            $fotoName = time() . '_' . $foto->getClientOriginalName();
+        if ($request->hasFile('foto')) {
+            $foto = $request->file('foto');
+            $fotoName = time() . '_' . uniqid() . '.' . $foto->getClientOriginalExtension();
             $foto->storeAs('sarana-ibadah-desa', $fotoName, 'public');
-
-            $validatedData['foto'] = 'sarana-ibadah-desa/' . $fotoName;
+            $data['foto'] = 'sarana-ibadah-desa/' . $fotoName;
         }
 
-        SaranaIbadahDesa::create($validatedData);
+        // Auto-approval + audit
+        $data['created_by'] = Auth::user()->name;
+        $data['updated_by'] = Auth::user()->name;
+        $data['status'] = 'Approved';
+        $data['approved_by'] = Auth::user()->name;
+        $data['approved_at'] = now();
+
+        SaranaIbadahDesa::create($data);
 
         return Redirect::route('superadmin.sarana-ibadah-desa.index')
-            ->with('success', 'ProfileDesa berhasil dibuat dengan foto.');
+            ->with('success', 'Data Sarana Ibadah Desa berhasil ditambahkan dan disetujui.');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show($id): View
     {
-        $saranaIbadahDesa = SaranaIbadahDesa::find($id);
+        $saranaIbadahDesa = SaranaIbadahDesa::with('desa', 'rtRwDesa')->findOrFail($id);
 
         return view('superadmin.sarana-ibadah-desa.show', compact('saranaIbadahDesa'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit($id): View
     {
-        $saranaIbadahDesa = SaranaIbadahDesa::find($id);
+        $saranaIbadahDesa = SaranaIbadahDesa::findOrFail($id);
         $desas = Desa::all();
 
         return view('superadmin.sarana-ibadah-desa.edit', compact('saranaIbadahDesa', 'desas'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(SaranaIbadahDesaRequest $request, SaranaIbadahDesa $saranaIbadahDesa): RedirectResponse
     {
-        $saranaIbadahDesa->update($request->validated());
+        $data = $request->validated();
+
+        if ($request->hasFile('foto')) {
+            if ($saranaIbadahDesa->foto && Storage::disk('public')->exists($saranaIbadahDesa->foto)) {
+                Storage::disk('public')->delete($saranaIbadahDesa->foto);
+            }
+
+            $foto = $request->file('foto');
+            $fotoName = time() . '_' . uniqid() . '.' . $foto->getClientOriginalExtension();
+            $foto->storeAs('sarana-ibadah-desa', $fotoName, 'public');
+            $data['foto'] = 'sarana-ibadah-desa/' . $fotoName;
+        }
+
+        // Update audit
+        $data['updated_by'] = Auth::user()->name;
+        $data['status'] = 'Approved';
+        $data['approved_by'] = Auth::user()->name;
+        $data['approved_at'] = now();
+
+        $saranaIbadahDesa->update($data);
 
         return Redirect::route('superadmin.sarana-ibadah-desa.index')
-            ->with('success', 'SaranaIbadahDesa updated successfully');
+            ->with('success', 'Data Sarana Ibadah Desa berhasil diperbarui dan disetujui.');
     }
 
     public function destroy($id): RedirectResponse
     {
-        SaranaIbadahDesa::find($id)->delete();
+        $saranaIbadahDesa = SaranaIbadahDesa::findOrFail($id);
+
+        if ($saranaIbadahDesa->foto && Storage::disk('public')->exists($saranaIbadahDesa->foto)) {
+            Storage::disk('public')->delete($saranaIbadahDesa->foto);
+        }
+
+        $saranaIbadahDesa->delete();
 
         return Redirect::route('superadmin.sarana-ibadah-desa.index')
-            ->with('success', 'SaranaIbadahDesa deleted successfully');
+            ->with('success', 'Data Sarana Ibadah Desa berhasil dihapus.');
     }
 }

@@ -14,12 +14,12 @@
                         <span class="card-title">{{ __('Update') }} Jembatan Desa</span>
                     </div>
                     <div class="card-body bg-white">
-                        <form method="POST" action="{{ route('superadmin.jembatan-desa.update', $jembatanDesa->id) }}"
+                        <form method="POST" action="{{ route('admin_desa.jembatan-desa.update', $jembatanDesa->id) }}"
                             role="form" enctype="multipart/form-data">
                             {{ method_field('PATCH') }}
                             @csrf
 
-                            @include('superadmin.jembatan-desa.form')
+                            @include('admin_desa.jembatan-desa.form')
 
                         </form>
                     </div>

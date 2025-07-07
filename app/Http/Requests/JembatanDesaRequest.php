@@ -36,6 +36,7 @@ class JembatanDesaRequest extends FormRequest
             'approved_at' => 'string',
             'latitude' => 'nullable|string',
             'longitude' => 'nullable|string',
+            'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ];
     }
 }

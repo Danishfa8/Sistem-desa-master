@@ -38,7 +38,16 @@
 
                 <div class="row mb-3">
                     <div class="col-sm-4">
-                        <strong>Tahun</strong>
+                        <strong>Nama Pendidikan</strong>
+                    </div>
+                    <div class="col-sm-8">
+                        {{ $pendidikanDesa->nama_pendidikan}}
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-sm-4">
+                        <strong>Jenis Pendidikan</strong>
                     </div>
                     <div class="col-sm-8">
                         {{ $pendidikanDesa->jenis_pendidikan }}
@@ -59,7 +68,13 @@
                         <strong>Foto</strong>
                     </div>
                     <div class="col-sm-8">
-                        {{ $pendidikanDesa->foto }}
+                    @if ($pendidikanDesa->foto)
+        <img src="{{ asset('storage/foto_pendidikan/' . $pendidikanDesa->foto) }}"
+             alt="Foto Pendidikan"
+             style="max-height: 60px; border-radius: 4px;">
+    @else
+        <span class="text-muted">Tidak ada</span>
+    @endif
                     </div>
                 </div>
 

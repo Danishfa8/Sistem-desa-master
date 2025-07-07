@@ -42,6 +42,7 @@
                                         <th>Lokasi</th>
                                         <th>Foto</th>
                                         <th>Created By</th>
+                                        <th>Status</th>
 
                                         <th></th>
                                     </tr>
@@ -79,6 +80,16 @@
     @endif
 </td>
                                             <td>{{ $jembatanDesa->created_by }}</td>
+                                            <td>
+                                            <span class="badge
+                                                @if ($jembatanDesa->status === 'Approved') bg-success
+                                                @elseif ($jembatanDesa->status === 'Pending') bg-warning text-dark
+                                                @elseif ($jembatanDesa->status === 'Arsip') bg-secondary
+                                                @elseif ($jembatanDesa->status === 'Rejected') bg-danger
+                                                @else bg-light text-dark @endif">
+                                                {{ $jembatanDesa->status }}
+                                            </span>
+                                        </td>
                                             <x-action-buttons :item="$jembatanDesa" route-prefix="admin_desa.jembatan-desa"
                                                 :ajukan-route="true" status-field="status" />
                                         </tr>
