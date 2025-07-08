@@ -8,6 +8,7 @@ use App\Models\Desa;
 use App\Models\KategoriPeta;
 use App\Models\JembatanDesa;
 use App\Models\PendidikanDesa;
+use App\Models\SaranaIbadahDesa; 
 
 class DataDalamPetaController extends Controller
 {
@@ -24,6 +25,7 @@ class DataDalamPetaController extends Controller
         $viewPeta = null;
         $jembatanMarkers = [];
         $pendidikanMarkers = [];
+        $saranaIbadahMarkers = [];
         $desaLat = null;
         $desaLng = null;
 
@@ -59,6 +61,15 @@ class DataDalamPetaController extends Controller
                         ->whereNotNull('longitude')
                         ->get();
                 }
+                if ($selectedKategori == 8) {
+                    $viewPeta = 'web.partials.peta-sarana-ibadah';
+                    $saranaIbadahMarkers = SaranaIbadahDesa::with('desa')
+                        ->where('desa_id', $selectedDesa)
+                        ->where('status', 'Approved')
+                        ->whereNotNull('latitude')
+                        ->whereNotNull('longitude')
+                        ->get();
+                }
             }
         }
 
@@ -72,6 +83,7 @@ class DataDalamPetaController extends Controller
             'viewPeta',
             'jembatanMarkers',
             'pendidikanMarkers',
+            'saranaIbadahMarkers',
             'desaLat',
             'desaLng'
         ));

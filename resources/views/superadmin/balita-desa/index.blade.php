@@ -38,7 +38,8 @@
                                         <th>Tahun</th>
                                         <th>Jenis Balita</th>
                                         <th>Created By</th>
-                                        <th></th>
+                                        <th>Status</th>
+                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -51,6 +52,16 @@
                                             <td>{{ $balitaDesa->tahun }}</td>
                                             <td>{{ $balitaDesa->jenis_balita }}</td>
                                             <td>{{ $balitaDesa->created_by }}</td>
+                                            <td>
+                                                <span class="badge
+                                                    @if ($balitaDesa->status === 'Approved') bg-success
+                                                    @elseif ($balitaDesa->status === 'Pending') bg-warning text-dark
+                                                    @elseif ($balitaDesa->status === 'Arsip') bg-secondary
+                                                    @elseif ($balitaDesa->status === 'Rejected') bg-danger
+                                                    @else bg-light text-dark @endif">
+                                                    {{ $balitaDesa->status }}
+                                                </span>
+                                            </td>
                                             <td>
                                                 <form
                                                     action="{{ route('superadmin.balita-desa.destroy', $balitaDesa->id) }}"

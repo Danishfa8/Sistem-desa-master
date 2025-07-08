@@ -38,7 +38,8 @@
                                         <th>Tahun</th>
                                         <th>Jumlah Balita</th>
                                         <th>Created By</th>
-                                        <th></th>
+                                        <th>Status</th>
+                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -51,6 +52,16 @@
                                             <td>{{ $balitaDesa->tahun }}</td>
                                             <td>{{ $balitaDesa->jumlah_balita }}</td>
                                             <td>{{ $balitaDesa->created_by }}</td>
+                                            <td>
+                                                <span class="badge
+                                                    @if ($balitaDesa->status === 'Approved') bg-success
+                                                    @elseif ($balitaDesa->status === 'Pending') bg-warning text-dark
+                                                    @elseif ($balitaDesa->status === 'Arsip') bg-secondary
+                                                    @elseif ($balitaDesa->status === 'Rejected') bg-danger
+                                                    @else bg-light text-dark @endif">
+                                                    {{ $balitaDesa->status }}
+                                                </span>
+                                            </td>
                                             <x-action-buttons :item="$balitaDesa" route-prefix="admin_desa.balita-desa"
                                                 :ajukan-route="true" status-field="status" />
                                         </tr>
