@@ -3,6 +3,7 @@
 use App\Http\Controllers\Superadmin\PkkDesaController;
 use App\Http\Controllers\Superadmin\BalitaDesaController;
 use App\Http\Controllers\Superadmin\BumdeController;
+use App\Http\Controllers\superadmin\DashboardController;
 use App\Http\Controllers\Superadmin\DesaController;
 use App\Http\Controllers\Superadmin\KecamatanController;
 use App\Http\Controllers\Superadmin\KelembagaanDesaController;
@@ -111,7 +112,8 @@ Route::middleware(['auth', 'role:superadmin'])->group(function () {
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     });
-    Route::view('superadmin/dashboard', 'superadmin.home.index');
+    // Route::view('superadmin/dashboard', 'superadmin.home.index');
+    Route::get('superadmin/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     // Route::get('/', function () {
     //     return view('superadmin.home.index')->name('superadmin.index');
     // });

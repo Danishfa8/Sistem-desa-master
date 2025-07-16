@@ -77,7 +77,7 @@ class TempatTinggalDesaController extends Controller
     {
         $tempatTinggalDesa->update($request->validated());
 
-        return Redirect::route('superadmin.tempat-tinggal-desas.index')
+        return Redirect::route('superadmin.tempat-tinggal-desa.index')
             ->with('success', 'TempatTinggalDesa updated successfully');
     }
 
@@ -85,7 +85,7 @@ class TempatTinggalDesaController extends Controller
     {
         TempatTinggalDesa::find($id)->delete();
 
-        return Redirect::route('superadmin.tempat-tinggal-desas.index')
+        return Redirect::route('superadmin.tempat-tinggal-desa.index')
             ->with('success', 'TempatTinggalDesa deleted successfully');
     }
 }

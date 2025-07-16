@@ -342,8 +342,8 @@ class DataAngkaController extends Controller
                     ],
                     5 => [
                         'model' => \App\Models\TempatTinggalDesa::class,
-                        'columns' => ['jenis_tempat_tinggal'],
-                        'groupBy' => ['jenis_tempat_tinggal'],
+                        'columns' => ['jenis_tempat_tinggal','jumlah'],
+                        'groupBy' => ['jenis_tempat_tinggal','jumlah'],
                         'filter_kategori' => true,
                     ],
                     6 => [

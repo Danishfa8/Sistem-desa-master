@@ -27,6 +27,7 @@ class TempatTinggalDesaRequest extends FormRequest
             'rt_rw_desa_id' => 'required',
             'tahun' => 'required|digits:4|integer|min:1900|max:' . (date('Y') + 5),
             'jenis_tempat_tinggal' => 'required',
+            'jumlah' => 'required',
             'created_by' => 'required|string',
             'updated_by' => 'string',
             'status' => 'required',

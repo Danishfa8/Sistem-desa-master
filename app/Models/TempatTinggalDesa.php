@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property $rt_rw_desa_id
  * @property $tahun
  * @property $jenis_tempat_tinggal
+ * @property $jumlah
  * @property $created_by
  * @property $updated_by
  * @property $status
@@ -52,7 +53,7 @@ class TempatTinggalDesa extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['id_kategori','desa_id', 'rt_rw_desa_id', 'tahun', 'jenis_tempat_tinggal', 'created_by', 'updated_by', 'status', 'reject_reason', 'approved_by', 'approved_at'];
+    protected $fillable = ['id_kategori','desa_id', 'rt_rw_desa_id', 'tahun', 'jenis_tempat_tinggal','jumlah', 'created_by', 'updated_by', 'status', 'reject_reason', 'approved_by', 'approved_at'];
 
 
     /**

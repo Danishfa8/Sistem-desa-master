@@ -1,83 +1,117 @@
 @extends('layouts.app')
+
 @section('content')
-    <div class="container-fluid">
+<div class="container-fluid">
 
-        <div class="row">
-            <div class="col">
-
-                <div class="h-100">
-                    <div class="row mb-3 pb-1">
-                        <div class="col-12">
-                            <div class="d-flex align-items-lg-center flex-lg-row flex-column">
-                                <div class="flex-grow-1">
-                                    <h4 class="fs-16 mb-1">Good Morning, Anna!</h4>
-                                    <p class="text-muted mb-0">Here's what's happening with your store today.
-                                    </p>
-                                </div>
-
-
-                            </div>
-                        </div> <!-- end card-->
-                    </div> <!-- end .rightbar-->
-
-                </div> <!-- end col -->
-            </div>
-
-        </div>
-        <!-- container-fluid -->
-        @if (is_null(Auth::user()->email_verified_at))
-            <!-- Trigger otomatis modal saat halaman dimuat -->
-            <script>
-                window.addEventListener('DOMContentLoaded', function() {
-                    var verifyModal = new bootstrap.Modal(document.getElementById('firstmodal'));
-                    verifyModal.show();
-                });
-            </script>
-        @endif
-        <!-- First modal dialog -->
-        <div class="modal fade" id="firstmodal" aria-hidden="true" aria-labelledby="..." tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-body text-center p-5">
-                        <lord-icon src="https://cdn.lordicon.com/tdrtiskw.json" trigger="loop"
-                            colors="primary:#f7b84b,secondary:#405189" style="width:130px;height:130px">
-                        </lord-icon>
-                        <div class="mt-4 pt-4">
-                            <h4>Email Belum Diverifikasi</h4>
-                            <p class="text-muted">Silakan verifikasi email Anda untuk melanjutkan menggunakan fitur
-                                aplikasi.</p>
-                            <button class="btn btn-warning" data-bs-target="#secondmodal" data-bs-toggle="modal"
-                                data-bs-dismiss="modal">
-                                Verifikasi Sekarang
-                            </button>
-                        </div>
-                    </div>
+    {{-- Greeting --}}
+    <div class="row mb-3 pb-1">
+        <div class="col-12">
+            <div class="d-flex align-items-lg-center flex-lg-row flex-column">
+                <div class="flex-grow-1">
+                    <h4 class="fs-16 mb-1">Selamat Datang, {{ Auth::user()->name }}!</h4>
+                    <p class="text-muted mb-0">Berikut ringkasan data Sistem Informasi Desa.</p>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Second modal dialog -->
-        <div class="modal fade" id="secondmodal" aria-hidden="true" aria-labelledby="..." tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-body text-center p-5">
-                        <lord-icon src="https://cdn.lordicon.com/zpxybbhl.json" trigger="loop"
-                            colors="primary:#405189,secondary:#0ab39c" style="width:150px;height:150px">
-                        </lord-icon>
-                        <div class="mt-4 pt-3">
-                            <h4 class="mb-3">Kirim Ulang Email Verifikasi</h4>
-                            <p class="text-muted mb-4">Klik tombol di bawah untuk mengirim ulang email verifikasi ke alamat
-                                Anda.</p>
-                            <div class="hstack gap-2 justify-content-center">
-                                <form method="POST" action="{{ route('verification.send') }}">
-                                    @csrf
-                                    <button type="submit" class="btn btn-success">Kirim Ulang</button>
-                                </form>
-                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Tutup</button>
-                            </div>
-                        </div>
-                    </div>
+    {{-- Cards --}}
+    <div class="row">
+        <div class="col-xl-3 col-md-6">
+            <div class="card card-animate">
+                <div class="card-body">
+                    <p class="text-uppercase fw-medium text-muted mb-0">Total Users</p>
+                    <h4 class="mt-4 text-secondary">{{ $userCount }}</h4>
+                    <div class="mt-2 text-muted">Jumlah semua pengguna</div>
+                </div>
+            </div>
+        </div><!-- end col -->
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card card-animate">
+                <div class="card-body">
+                    <p class="text-uppercase fw-medium text-muted mb-0">Total Desa</p>
+                    <h4 class="mt-4 text-secondary">{{ $desaCount }}</h4>
+                    <div class="mt-2 text-muted">Jumlah semua desa</div>
+                </div>
+            </div>
+        </div><!-- end col -->
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card card-animate">
+                <div class="card-body">
+                    <p class="text-uppercase fw-medium text-muted mb-0">Total Kecamatan</p>
+                    <h4 class="mt-4 text-secondary">{{ $kecamatanCount }}</h4>
+                    <div class="mt-2 text-muted">Jumlah semua kecamatan</div>
+                </div>
+            </div>
+        </div><!-- end col -->
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card card-animate">
+                <div class="card-body">
+                    <p class="text-uppercase fw-medium text-muted mb-0">Total Data</p>
+                    <h4 class="mt-4 text-secondary">{{ $totalData }}</h4>
+                    <div class="mt-2 text-muted">Jumlah total dari semua tabel</div>
+                </div>
+            </div>
+        </div><!-- end col -->
+    </div><!-- end row -->
+
+    {{-- Bar Chart --}}
+<div class="row">
+    <div class="col-12">
+        <div class="card card-animate">
+            <div class="card-body">
+                <h4 class="card-title mb-4">Diagram Total Data per Tabel</h4>
+                
+                {{-- Tambahkan height secara eksplisit di wrapper div --}}
+                <div style="height: 300px;">
+                    <canvas id="dataBarChart"></canvas>
                 </div>
             </div>
         </div>
-    @endsection
+    </div>
+</div>
+
+
+</div><!-- container-fluid -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('dataBarChart').getContext('2d');
+    const chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: {!! json_encode(array_keys($tableCounts)) !!},
+            datasets: [{
+                label: 'Jumlah Data',
+                data: {!! json_encode(array_values($tableCounts)) !!},
+                backgroundColor: 'rgba(53, 119, 241, 0.8)',
+                borderColor: 'rgba(53, 119, 241, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Jumlah'
+                    }
+                },
+                x: {
+                    ticks: {
+                        autoSkip: false,
+                        maxRotation: 30,
+                        minRotation: 30
+                    }
+                }
+            }
+        }
+    });
+</script>
+
+@endsection
