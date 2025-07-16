@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'role:admin_kabupaten'])->group(function () {
     Route::prefix('admin_kabupaten')->name('admin_kabupaten.')->group(function () {
-        Route::view('/dashboard', 'admin_kabupaten.dashboard')->name('dashboard');
+        // Route::view('/dashboard', 'admin_kabupaten.dashboard')->name('dashboard');
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('kecamatans', [DashboardController::class, 'kecamatan'])->name('kecamatan');
         Route::get('desas', [DashboardController::class, 'desa'])->name('desa');
         Route::get('profile-desa', [DashboardController::class, 'profileDesa'])->name('profile-desa');

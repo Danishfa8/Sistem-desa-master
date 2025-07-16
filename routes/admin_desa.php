@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminDesa\AjukanController;
 use App\Http\Controllers\AdminDesa\PkkDesaController;
 use App\Http\Controllers\AdminDesa\BalitaDesaController;
 use App\Http\Controllers\AdminDesa\BumdeController;
+use App\Http\Controllers\admindesa\DashboardController;
 use App\Http\Controllers\AdminDesa\DesaController;
 use App\Http\Controllers\AdminDesa\KecamatanController;
 use App\Http\Controllers\AdminDesa\KelembagaanDesaController;
@@ -41,6 +42,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::middleware(['auth', 'role:admin_desa'])->group(function () {
+    Route::get('admin_desa/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::prefix('admin_desa')->name('admin_desa.')->group(function () {
         // Kecamatan
         Route::resource('kecamatans', KecamatanController::class);
@@ -101,7 +103,8 @@ Route::middleware(['auth', 'role:admin_desa'])->group(function () {
             ->where('resource', '[a-z-]+')
             ->where('id', '[0-9]+');
     });
-    Route::view('admin_desa/dashboard', 'admin_desa.home.index');
+    // Route::view('admin_desa/dashboard', 'admin_desa.home.index');
+    
     // Route::get('/', function () {
     //     return view('superadmin.home.index')->name('superadmin.index');
     // });

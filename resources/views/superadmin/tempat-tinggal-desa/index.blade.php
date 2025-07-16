@@ -36,6 +36,7 @@
                                         <th>RT/RW</th>
                                         <th>Tahun</th>
                                         <th>Jenis Tempat Tinggal</th>
+                                        <th><strong>Jumlah</strong></th>
                                         <th>Created By</th>
                                         <th></th>
                                     </tr>
@@ -50,6 +51,7 @@
                                             </td>
                                             <td>{{ $tempatTinggalDesa->tahun }}</td>
                                             <td>{{ $tempatTinggalDesa->jenis_tempat_tinggal }}</td>
+                                            <td>{{ $tempatTinggalDesa->jumlah }}</td>
                                             <td>{{ $tempatTinggalDesa->created_by }}</td>
 
                                             <td>

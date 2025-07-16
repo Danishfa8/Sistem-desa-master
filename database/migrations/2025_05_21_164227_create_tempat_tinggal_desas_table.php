@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('rt_rw_desa_id')->constrained('rt_rw_desas')->onDelete('cascade');
             $table->year('tahun');
             $table->enum('jenis_tempat_tinggal', ['Jumlah Perumahan', 'Jumlah Rumah', 'Jumlah Warga', 'RLTH']);
+            $table->integer('jumlah')->nullable();
             $table->string('created_by');
             $table->string('updated_by')->nullable();
             $table->enum('status', ['Arsip', 'Pending', 'Approved', 'Rejected'])->default('Arsip');

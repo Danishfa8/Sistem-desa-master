@@ -64,6 +64,14 @@
         'jenis_tempat_tinggal',
         '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>',
         ) !!}
+        <div class="form-group mb-2">
+            <label for="jumlah" class="form-label">{{ __('Jumlah') }}</label>
+            <input type="number" name="jumlah" id="jumlah"
+                class="form-control @error('jumlah') is-invalid @enderror"
+                value="{{ old('jumlah', $tempatTinggalDesa?->jumlah) }}"
+                placeholder="Masukkan jumlah...">
+            {!! $errors->first('jumlah', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
+        </div>
     </div>
     <input type="hidden" name="created_by" value="{{ Auth::user()->name }}">
     <input type="hidden" name="updated_by" class="form-control" value="{{ $kelembagaanDesa->updated_by ?? '-' }}">
