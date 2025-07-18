@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property $desa_id
  * @property $rt_rw_desa_id
  * @property $tahun
- * @property $jenis_lansia
+ * @property $jumlah_lansia
  * @property $created_by
  * @property $updated_by
  * @property $status
@@ -48,7 +48,7 @@ class LansiaDesa extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['desa_id', 'rt_rw_desa_id', 'tahun', 'jenis_lansia', 'created_by', 'updated_by', 'status', 'reject_reason', 'approved_by', 'approved_at'];
+    protected $fillable = ['desa_id', 'rt_rw_desa_id', 'tahun', 'jumlah_lansia', 'created_by', 'updated_by', 'status', 'reject_reason', 'approved_by', 'approved_at'];
 
 
     /**

@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Desa Cantik - Profil Desa</title>
+    <!-- Favicon -->
+<link rel="icon" type="image/png" href="{{ asset('assets/images/logo-kabupaten.png') }}">
+
     @vite('resources/css/app.css')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -98,12 +101,12 @@
                     <img src="{{ asset('assets/icons/peta.png') }}" alt="Peta Icon" class="w-6 h-6 mb-1">
                     Desa Dalam Peta
                 </a>
-                <a href="{{ route('desa-dalam-buku') }}"
+                <!-- <a href="#"
                     class="flex flex-col items-center justify-center transition border border-gray-300 rounded-lg p-2 hover:border-blue-500 min-w-[80px] {{ request()->routeIs('desa-dalam-buku') ? 'text-blue-600 font-semibold border-blue-500' : 'text-gray-700 hover:text-blue-600' }}">
                     <img src="{{ asset('assets/icons/buku.png') }}" alt="Buku Icon"
                         class="w-6 h-6 mb-1">
                     Buku Monografi
-                </a>
+                </a> -->
                 <a href="{{ route('data.informasi') }}"
                     class="flex flex-col items-center justify-center transition border border-gray-300 rounded-lg p-2 hover:border-blue-500 min-w-[80px] {{ request()->routeIs('data.informasi') ? 'text-blue-600 font-semibold border-blue-500' : 'text-gray-700 hover:text-blue-600' }}">
                     <img src="{{ asset('assets/icons/infodata.png') }}" alt="Metadata Icon"
@@ -134,12 +137,12 @@
                         class="w-6 h-6 mb-1">
                     Desa Dalam Peta
                 </a>
-                <a href="{{ route('desa-dalam-buku') }}"
+                <!-- <a href="#"
                     class="flex flex-col items-center justify-center transition border border-gray-300 rounded-lg p-3 hover:border-blue-500 {{ request()->routeIs('desa-dalam-buku') ? 'text-blue-600 font-semibold border-blue-500' : 'text-gray-700 hover:text-blue-600' }}">
                     <img src="{{ asset('assets/icons/buku.png') }}" alt="Buku Icon"
                         class="w-6 h-6 mb-1">
                     Buku Monografi
-                </a>
+                </a> -->
                 <a href="{{ route('data.informasi') }}"
                     class="flex flex-col items-center justify-center transition border border-gray-300 rounded-lg p-3 hover:border-blue-500 {{ request()->routeIs('data.informasi') ? 'text-blue-600 font-semibold border-blue-500' : 'text-gray-700 hover:text-blue-600' }}">
                     <img src="{{ asset('assets/icons/infodata.png') }}" alt="Metadata Icon"
@@ -176,7 +179,7 @@
         </script>
         
         <!-- Loading Bar Script -->
-        @vite('resources/js/loading-app.js')
+        <!-- @vite('resources/js/loading-app.js') -->
 </body>
 
 </html>

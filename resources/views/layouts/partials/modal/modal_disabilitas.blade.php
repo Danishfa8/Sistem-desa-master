@@ -46,6 +46,14 @@
                  </div>
                  <div class="row mb-3">
                      <div class="col-sm-4">
+                         <strong>Jumlah Disabilitas</strong>
+                     </div>
+                     <div class="col-sm-8">
+                     {{ $disabilitasDesa->jumlah }}
+                     </div>
+                 </div>
+                 <div class="row mb-3">
+                     <div class="col-sm-4">
                          <strong>Created By</strong>
                      </div>
                      <div class="col-sm-8">

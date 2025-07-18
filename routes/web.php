@@ -8,6 +8,7 @@ use App\Http\Controllers\ProfileDesaController;
 use App\Http\Controllers\Superadmin\KelembagaanDesaController;
 use App\Http\Controllers\InformasiDesaController;
 use App\Http\Controllers\WebController;
+use App\Http\Controllers\BukuDesaController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [WebController::class, 'index'])->name('web.index');
@@ -18,10 +19,34 @@ Route::get('/profile-desa/show-desa/{kecamatan_id}', [ProfileDesaController::cla
 Route::get('/detail-desa/{desa_id}', [ProfileDesaController::class, 'detailDesa'])->name('detail.desa');
 Route::get('/desa-section/{desaId}/{section}', [ProfileDesaController::class, 'getDesaSection'])->name('desa.section');
 
-// web.php
+// peta.php
+// Route::get('/desa-dalam-peta', [DataDalamPetaController::class, 'index'])->name('peta.dinamik');
+// Route::get('/desa-dalam-peta/get-tahun/{kategori}', [DataDalamPetaController::class, 'getTahunByKategori']);
+// Route::get('/api/geojson/desa/{kecamatan_id}', [DataDalamPetaController::class, 'geojsonDesa']);
+//uji coba
 Route::get('/desa-dalam-peta', [DataDalamPetaController::class, 'index'])->name('peta.dinamik');
-Route::get('/map/kecamatan/{kecamatanId}/desa', [DataDalamPetaController::class, 'getDesaByKecamatan']);
-Route::get('/map/desa/{desaId}/kategori-data', [DataDalamPetaController::class, 'getKategoriData']);
+Route::get('/desa-dalam-peta/get-desa/{kecamatan_id}', [DataDalamPetaController::class, 'getDesa']);
+Route::get('/desa-dalam-peta/get-tahun/{kategori}', [DataDalamPetaController::class, 'getTahun']);
+Route::get('/desa-dalam-peta/geojson', [DataDalamPetaController::class, 'getGeojson']);
+Route::get('/desa-dalam-peta/detail-desa', [DataDalamPetaController::class, 'getDetailDesa']);
+Route::get('/desa-dalam-peta/marker', [DataDalamPetaController::class, 'getMarkerData'])->name('peta.marker');
+Route::get('/api/desa-by-kecamatan/{id}', function ($id) {
+    return \App\Models\Desa::where('kecamatan_id', $id)->select('id', 'nama_desa')->get();
+});
+Route::get('/desa-dalam-peta/marker-detail', [DataDalamPetaController::class, 'getMarkerDetail']);
+
+
+
+
+// Route::get('/desa-dalam-peta', [DataDalamPetaController::class, 'index'])->name('peta.dinamik');
+// Route::get('/map/kecamatan/{kecamatanId}/desa', [DataDalamPetaController::class, 'getDesaByKecamatan']);
+// Route::get('/map/desa/{desaId}/kategori-data', [DataDalamPetaController::class, 'getKategoriData']);
+// Route::get('/tahun-by-kategori', [DataDalamPetaController::class, 'getTahunByKategori']);
+// // Route untuk ambil tahun berdasarkan kategori via AJAX
+// Route::get('/api/tahun/{kategori}', [DataDalamPetaController::class, 'getTahunByKategori'])->name('api.tahun');
+// Route::get('/desa-dalam-peta/get-tahun/{kategori}', [DataDalamPetaController::class, 'getTahunByKategori']);
+// Route::get('/api/geojson/desa/{kecamatan_id}', [App\Http\Controllers\DataDalamPetaController::class, 'geojsonDesa']);
+
 // Route::prefix('map')->name('map.')->group(function () {
 //     // Basic data endpoints
 
@@ -53,7 +78,13 @@ Route::get('/debug-table-structure', [DataAngkaController::class, 'debugTableStr
 Route::get('/debug-query', [DataAngkaController::class, 'debugQuery'])->name('debug.query');
 
 // Tambahkan route untuk Buku Desa
-Route::get('/desa-dalam-buku', [BukuDesaController::class, 'index'])->name('desa-dalam-buku');
+// Route::get('/desa-dalam-buku', [BukuDesaController::class, 'index'])->name('desa-dalam-buku');
+// Route::get('/desa-dalam-buku/data', [BukuDesaController::class, 'getData'])->name('desa-dalam-buku.data');
+// Route::get('/desa-dalam-buku/pdf', [BukuDesaController::class, 'generatePdf'])->name('desa-dalam-buku.pdf');
+// Route::get('/desa-dalam-buku/download', [BukuDesaController::class, 'downloadPdf'])->name('desa-dalam-buku.download');
+
+
+
 //Route Informasi Data
 Route::get('/informasi-data', [InformasiDesaController::class, 'index'])->name('data.informasi');
 

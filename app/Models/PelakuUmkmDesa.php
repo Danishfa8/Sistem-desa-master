@@ -49,7 +49,7 @@ class PelakuUmkmDesa extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['desa_id', 'rt_rw_desa_id', 'tahun', 'jenis_pelaku_umkm', 'created_by', 'updated_by', 'status', 'reject_reason', 'approved_by', 'approved_at'];
+    protected $fillable = ['desa_id', 'rt_rw_desa_id', 'tahun', 'jumlah_umkm', 'created_by', 'updated_by', 'status', 'reject_reason', 'approved_by', 'approved_at'];
 
 
     /**

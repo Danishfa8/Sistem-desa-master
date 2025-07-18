@@ -28,13 +28,14 @@
                 </div>
 
                 <div class="row mb-3">
-                    <div class="col-sm-4">
-                        <strong>Jenis Pelaku UMKM</strong>
-                    </div>
-                    <div class="col-sm-8">
-                        {{ $pelakuUmkmDesa->jenis_pelaku_umkm }}
-                    </div>
-                </div>
+    <div class="col-sm-4">
+        <strong>Jumlah UMKM</strong>
+    </div>
+    <div class="col-sm-8">
+        {{ number_format($pelakuUmkmDesa->jumlah_umkm) }}
+    </div>
+</div>
+
 
                 <div class="row mb-3">
                     <div class="col-sm-4">

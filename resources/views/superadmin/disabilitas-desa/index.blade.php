@@ -36,6 +36,7 @@
                                         <th>RT/RW</th>
                                         <th>Tahun</th>
                                         <th>Jenis Disabilitas</th>
+                                        <th><strong>Jumlah</strong></th> 
                                         <th>Created By</th>
                                         <th></th>
                                     </tr>
@@ -50,6 +51,7 @@
                                             </td>
                                             <td>{{ $disabilitasDesa->tahun }}</td>
                                             <td>{{ $disabilitasDesa->jenis_disabilitas }}</td>
+                                            <td>{{ $disabilitasDesa->jumlah }}</td>
                                             <td>{{ $disabilitasDesa->created_by }}</td>
 
                                             <td>

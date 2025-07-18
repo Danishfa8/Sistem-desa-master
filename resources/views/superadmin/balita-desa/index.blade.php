@@ -50,7 +50,7 @@
                                             <td>{{ $balitaDesa->desa->nama_desa }}</td>
                                             <td>{{ $balitaDesa->rtRwDesa->rt }}/{{ $balitaDesa->rtRwDesa->rw }}</td>
                                             <td>{{ $balitaDesa->tahun }}</td>
-                                            <td>{{ $balitaDesa->jenis_balita }}</td>
+                                            <td>{{ $balitaDesa->jumlah_balita }}</td>
                                             <td>{{ $balitaDesa->created_by }}</td>
                                             <td>
                                                 <span class="badge

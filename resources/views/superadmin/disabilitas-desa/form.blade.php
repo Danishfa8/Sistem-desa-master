@@ -73,6 +73,21 @@
             '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>',
         ) !!}
     </div>
+    <div class="form-group mb-2 mt-2">
+            <label for="jumlah" class="form-label">{{ __('Jumlah Disabilitas') }}</label>
+            <input type="number"
+                   name="jumlah"
+                   id="jumlah"
+                   class="form-control @error('jumlah') is-invalid @enderror"
+                   value="{{ old('jumlah', $disabilitasDesa?->jumlah) }}"
+                   min="0"
+                   required>
+            @error('jumlah')
+                <div class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                </div>
+            @enderror
+        </div>
     <input type="hidden" name="created_by" value="{{ Auth::user()->name }}">
     <input type="hidden" name="updated_by" class="form-control" value="{{ $kelembagaanDesa->updated_by ?? '-' }}">
     <input type="hidden" name="status" class="form-control" value="Approved" id="status" placeholder="Status">

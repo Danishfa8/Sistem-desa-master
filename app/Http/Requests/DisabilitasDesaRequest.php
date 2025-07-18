@@ -26,6 +26,7 @@ class DisabilitasDesaRequest extends FormRequest
 			'rt_rw_desa_id' => 'required',
 			'tahun' => 'required',
 			'jenis_disabilitas' => 'required',
+            'jumlah' => 'required|integer|min:0',
 			'created_by' => 'required|string',
 			'updated_by' => 'string',
 			'status' => 'required',

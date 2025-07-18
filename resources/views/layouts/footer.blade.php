@@ -4,7 +4,7 @@
          <!-- Tentang Kami + Logo -->
          <div class="md:w-1/3">
             <div class="flex items-start space-x-3 mb-3">
-               <img src="{{ asset('assets/images/Logo-brebes.png') }}" alt="Logo Kabupaten Brebes" class="w-12 h-12 object-contain" width="48" height="48" />
+               <img src="{{ asset('assets/images/logo-kabupaten.png') }}" alt="Logo Kabupaten Brebes" class="w-12 h-12 object-contain" width="48" height="48" />
                <span class="text-gray-300 h-8 border-r border-gray-300 mx-1"></span>
                <div class="flex flex-col overflow-hidden">
                   <span class="text-xl font-bold text-white tracking-tight leading-tight slide-in-left">

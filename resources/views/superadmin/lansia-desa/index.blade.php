@@ -35,10 +35,10 @@
                                         <th>Desa</th>
                                         <th>RT/RW</th>
                                         <th>Tahun</th>
-                                        <th>Jenis Lansia</th>
+                                        <th>Jumlah Lansia</th>
                                         <th>Created By</th>
 
-                                        <th></th>
+                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -49,27 +49,14 @@
                                             <td>{{ $lansiaDesa->desa->nama_desa }}</td>
                                             <td>{{ $lansiaDesa->rtRwDesa->rt }}/{{ $lansiaDesa->rtRwDesa->rw }}</td>
                                             <td>{{ $lansiaDesa->tahun }}</td>
-                                            <td>{{ $lansiaDesa->jenis_lansia }}</td>
+                                            <td>{{ $lansiaDesa->jumlah_lansia }}</td> 
                                             <td>{{ $lansiaDesa->created_by }}</td>
 
                                             <td>
-                                                <form
-                                                    action="{{ route('superadmin.lansia-desa.destroy', $lansiaDesa->id) }}"
-                                                    method="POST">
-                                                    <button type="button" class="btn btn-sm btn-primary"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#showModal{{ $lansiaDesa->id }}">
-                                                        <i class="las la-eye"></i> {{ __('Show') }}
-                                                    </button>
-                                                    <a class="btn btn-sm btn-success"
-                                                        href="{{ route('superadmin.lansia-desa.edit', $lansiaDesa->id) }}"><i
-                                                            class="las la-edit"></i> {{ __('Edit') }}</a>
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm"
-                                                        onclick="event.preventDefault(); confirm('Are you sure to delete?') ? this.closest('form').submit() : false;"><i
-                                                            class="las la-trash"></i> {{ __('Delete') }}</button>
-                                                </form>
+                                            <x-action-buttons-superadmin 
+                                                :item="$lansiaDesa" 
+                                                routePrefix="superadmin.lansia-desa"
+                                                :deleteRoute="true" />
                                             </td>
                                         </tr>
                                         @include('layouts.partials.modal.modal_lansia')

@@ -36,7 +36,7 @@
                                         <th>Desa</th>
                                         <th>RT/RW</th>
                                         <th>Tahun</th>
-                                        <th>Jenis Pelaku Umkm</th>
+                                        <th>Jumlah UMKM</th>
                                         <th>Created By</th>
                                         <th></th>
                                     </tr>
@@ -50,27 +50,14 @@
                                             <td>{{ $pelakuUmkmDesa->rtRwDesa->rt }}/{{ $pelakuUmkmDesa->rtRwDesa->rw }}
                                             </td>
                                             <td>{{ $pelakuUmkmDesa->tahun }}</td>
-                                            <td>{{ $pelakuUmkmDesa->jenis_pelaku_umkm }}</td>
+                                            <td>{{ number_format($pelakuUmkmDesa->jumlah_umkm) }}</td> 
                                             <td>{{ $pelakuUmkmDesa->created_by }}</td>
 
                                             <td>
-                                                <form
-                                                    action="{{ route('superadmin.pelaku-umkm-desa.destroy', $pelakuUmkmDesa->id) }}">
-                                                    <button type="button" class="btn btn-sm btn-primary"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#showModal{{ $pelakuUmkmDesa->id }}">
-                                                        <i class="las la-eye"></i> {{ __('Show') }}
-                                                    </button>
-
-                                                    <a class="btn btn-sm btn-success"
-                                                        href="{{ route('superadmin.pelaku-umkm-desa.edit', $pelakuUmkmDesa->id) }}"><i
-                                                            class="las la-edit"></i> {{ __('Edit') }}</a>
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm"
-                                                        onclick="event.preventDefault(); confirm('Are you sure to delete?') ? this.closest('form').submit() : false;"><i
-                                                            class="las la-trash"></i> {{ __('Delete') }}</button>
-                                                </form>
+                                            <x-action-buttons-superadmin 
+                                                :item="$pelakuUmkmDesa" 
+                                                routePrefix="superadmin.pelaku-umkm-desa"
+                                                :deleteRoute="true" />
                                             </td>
                                         </tr>
                                         @include('layouts.partials.modal.modal_pelaku_umkm')

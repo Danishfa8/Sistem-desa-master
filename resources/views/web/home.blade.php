@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Brebes - Aplikasi Monografi Desa</title>
+    <!-- Favicon -->
+<link rel="icon" type="image/png" href="{{ asset('assets/images/logo-kabupaten.png') }}">
+
     @vite('resources/css/app.css')
 
     <!-- Custom Hover Animation -->
@@ -30,13 +33,13 @@
         <div class="relative z-10 flex flex-col items-center justify-start min-h-screen text-white pt-12 px-4">
             <!-- Logo dan Judul -->
             <div class="text-center">
-                <img src="{{ asset('assets/images/Logo-brebes.png') }}" alt="Logo" class="w-24 h-24 mb-4 mx-auto">
+                <img src="{{ asset('assets/images/logo-kabupaten.png') }}" alt="Logo" class="w-24 h-24 mb-4 mx-auto">
                 <h1 class="text-4xl font-bold">Brebes</h1>
                 <p class="text-lg text-gray-200">Aplikasi Desa Cantik</p>
             </div>
 
             <!-- Pencarian -->
-            <div class="mt-6 w-full max-w-md">
+            <!-- <div class="mt-6 w-full max-w-md">
                 <div class="flex shadow-lg">
                     <input type="text" placeholder="Mau cari data apa?"
                         class="flex-grow px-4 py-3 rounded-l-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400">
@@ -45,7 +48,7 @@
                         Cari
                     </button>
                 </div>
-            </div>
+            </div> -->
 
             <!-- Menu Section -->
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-16 w-full max-w-4xl">
@@ -64,12 +67,12 @@
                     <img src="{{ asset('assets/icons/peta.png') }}" alt="Peta Icon" class="w-6 h-6 mb-2">
                     Desa Dalam Peta
                 </a>
-                <a href="{{ route('desa-dalam-buku') }}"
+                <!-- <a href="#"
                     class="menu-card flex flex-col items-center justify-center transition border border-gray-300 bg-white rounded-lg p-4 hover:border-blue-500 min-w-[80px] {{ request()->is('buku-monografi') ? 'text-blue-600 font-semibold border-blue-500' : 'text-gray-700 hover:text-blue-600' }}">
                     <img src="{{ asset('assets/icons/buku.png') }}" alt="Buku Icon"
                         class="w-6 h-6 mb-2">
                     Buku Monografi
-                </a>
+                </a> -->
                 <a href="{{ route('data.informasi') }}"
                     class="menu-card flex flex-col items-center justify-center transition border border-gray-300 bg-white rounded-lg p-4 hover:border-blue-500 min-w-[80px] {{ request()->is('data.informasi') ? 'text-blue-600 font-semibold border-blue-500' : 'text-gray-700 hover:text-blue-600' }}">
                     <img src="{{ asset('assets/icons/infodata.png') }}" alt="Metadata Icon"

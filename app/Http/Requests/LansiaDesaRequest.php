@@ -25,7 +25,7 @@ class LansiaDesaRequest extends FormRequest
 			'desa_id' => 'required',
 			'rt_rw_desa_id' => 'required',
 			'tahun' => 'required',
-			'jenis_lansia' => 'required',
+			'jumlah_lansia' => 'required',
 			'created_by' => 'required|string',
 			'updated_by' => 'string',
 			'status' => 'required',

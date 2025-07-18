@@ -6,7 +6,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <!-- Image -->
             <div class="order-2 lg:order-1">
-                <img src="{{ asset($data->foto) }}" alt="Kantor Pemerintahan" class="w-full h-auto rounded-lg shadow-md">
+            <img src="{{ asset('storage/' . $data->foto) }}" alt="Kantor Pemerintahan" class="w-full h-auto rounded-lg shadow-md">
             </div>
 
             <!-- Content -->

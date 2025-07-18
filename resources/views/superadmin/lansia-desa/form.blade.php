@@ -27,16 +27,10 @@
             {!! $errors->first('tahun', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
         <div class="form-group mb-2 mb20">
-            <label for="jenis_lansia" class="form-label">{{ __('Jenis Lansia') }}</label>
-            <select name="jenis_lansia" class="form-control @error('jenis_lansia') is-invalid @enderror"
-                id="jenis_lansia">
-                <option value="">-- Pilih Jenis Lansia --</option>
-                <option value="jumlah_lansia"
-                    {{ old('jenis_lansia', $lansiaDesa?->jenis_lansia) == 'jumlah_lansia' ? 'selected' : '' }}>
-                    jumlah_lansia
-                </option>
-            </select>
-            {!! $errors->first('jenis_lansia', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
+            <label for="jumlah_lansia" class="form-label">{{ __('Jumlah Lansia') }}</label>
+            <input type="number" name="jumlah_lansia" class="form-control @error('jumlah_lansia') is-invalid @enderror"
+                value="{{ old('jumlah_lansia', $lansiaDesa?->jumlah_lansia) }}" id="jumlah_lansia" placeholder="Masukkan Jumlah Lansia">
+            {!! $errors->first('jumlah_lansia', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
         <input type="hidden" name="created_by" value="{{ Auth::user()->name }}">
         <input type="hidden" name="updated_by" class="form-control" value="{{ $kelembagaanDesa->updated_by ?? '-' }}">

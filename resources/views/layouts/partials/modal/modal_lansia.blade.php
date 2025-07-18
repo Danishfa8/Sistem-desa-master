@@ -28,13 +28,14 @@
                 </div>
 
                 <div class="row mb-3">
-                    <div class="col-sm-4">
-                        <strong>Jenis Lansia</strong>
-                    </div>
-                    <div class="col-sm-8">
-                        {{ $lansiaDesa->jenis_lansia }}
-                    </div>
-                </div>
+    <div class="col-sm-4">
+        <strong>Jumlah Lansia</strong>
+    </div>
+    <div class="col-sm-8">
+        {{ $lansiaDesa->jumlah_lansia }}
+    </div>
+</div>
+
 
                 <div class="row mb-3">
                     <div class="col-sm-4">

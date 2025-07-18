@@ -31,7 +31,7 @@ class Desa extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['kecamatan_id', 'nama_desa', 'klas', 'stat_pem', 'latitude', 'longitude'];
+    protected $fillable = ['kecamatan_id', 'nama_desa', 'klas', 'stat_pem', 'latitude', 'longitude', 'geojson'];
 
 
     /**

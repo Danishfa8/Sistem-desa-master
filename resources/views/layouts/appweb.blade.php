@@ -13,7 +13,9 @@
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" rel="stylesheet" />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset('assets/images/Logo-brebes.png') }}">
+    <!-- Favicon -->
+<link rel="icon" type="image/png" href="{{ asset('assets/images/logo-kabupaten.png') }}">
+
 
     <!-- Styles -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
